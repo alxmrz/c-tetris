@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include "element.h"
 #include "figure.h"
+#include "figure_list.h"
 #include "configuration.h"
 
 const int SCREEN_WIDTH = WINDOW_WIDTH;
@@ -32,11 +33,10 @@ int main (int argc, char ** args) {
         return 0;
     }*/
 
-    Figure *figures[4];
+    FigureList *fl = create_figure_list();
     Figure *figure = create_o_figure(FIGURE_START_X_POINT,FIGURE_START_Y_POINT);
-    Figure *figure2 = create_o_figure(FIGURE_START_X_POINT,FIGURE_START_Y_POINT+100);
 
-    figures[0] = figure;
+    fl_push(fl, figure);
 
 
     SDL_Event windowEvent;
@@ -76,7 +76,7 @@ int main (int argc, char ** args) {
                         int res = move_down_figure(figure);
                         if (res == 0) {
                             figure = create_o_figure(FIGURE_START_X_POINT,FIGURE_START_Y_POINT);
-                            figures[1] = figure;
+                            fl_push(fl, figure);
                         }
                         break;        
                     default:
@@ -90,17 +90,16 @@ int main (int argc, char ** args) {
                 fprintf(stdout, "MOUSE BOTTON CLICKED");
             }
         }
-
-        int countF = sizeof(figures) / sizeof(figures[0]);
-        for (int i = 0; i < countF; i++) {
-            if (figures[i] == NULL) {
+        printf("SIZE: (%d)", fl->size);
+        for (int i = 0; i < fl->size; i++) {
+            if (fl->figures[i] == NULL) {
                 break;
             }
             Element *elements[4];
-            elements[0] = figures[i]->e1;
-            elements[1] = figures[i]->e2;
-            elements[2] = figures[i]->e3;
-            elements[3] = figures[i]->e4;
+            elements[0] = fl->figures[i]->e1;
+            elements[1] = fl->figures[i]->e2;
+            elements[2] = fl->figures[i]->e3;
+            elements[3] = fl->figures[i]->e4;
             for (int j = 0; j < sizeof(elements) / sizeof(elements[0]); j++) {
                 SDL_Rect rect= {elements[j]->x, elements[j]->y,ELEMENT_SIZE,ELEMENT_SIZE};
                 SDL_Rect inrect= {elements[j]->x+1, elements[j]->y+1,ELEMENT_SIZE-1,ELEMENT_SIZE-1};
