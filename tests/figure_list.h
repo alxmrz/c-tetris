@@ -4,6 +4,7 @@
 #include "cmocka.h"
 #include "../src/figure.h"
 #include "../src/figure_list.h"
+#include "../src/element.h"
 
 static void test_fl_create_figure_list(void **state){
     FigureList *fl = create_figure_list();
@@ -81,6 +82,27 @@ static void test_fl_figure_not_intersect_itself(void **state) {
     int actual = is_figure_intersect_list(fl, &figure);
 
     assert_int_equal(expected, actual);
+}
+
+static void test_fl_delete_one_line_elements(void **state) {
+    FigureList *fl = create_figure_list();
+    for (int i = 0; i < 10; i++) {
+        Figure *figure = create_o_figure(200+ELEMENT_SIZE*2, 200);
+        fl_push(fl, figure);
+    }
+
+    int actual = delete_one_line_elements(fl);
+    printf("%s\n", "AFTER DELEE IN TEST");
+    assert_int_equal(2, actual);
+    assert_null(fl->figures[1]->e1);
+    assert_null(fl->figures[2]->e1);
+    assert_null(fl->figures[3]->e1);
+    assert_null(fl->figures[4]->e1);
+    assert_null(fl->figures[5]->e1);
+    assert_null(fl->figures[6]->e1);
+    assert_null(fl->figures[7]->e1);
+    assert_null(fl->figures[8]->e1);
+    assert_null(fl->figures[9]->e1);
 }
 
 #endif

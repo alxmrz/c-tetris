@@ -36,9 +36,6 @@ int main (int argc, char ** args) {
     FigureList *fl = create_figure_list();
     Figure *figure = create_o_figure(FIGURE_START_X_POINT,FIGURE_START_Y_POINT);
 
-    fl_push(fl, figure);
-
-
     SDL_Event windowEvent;
     float downCounter = 0.0;
     while (1) {
@@ -49,7 +46,7 @@ int main (int argc, char ** args) {
             /*for (int i = 0; i < sizeof(elements) / sizeof(Element); i++) {
                 elements[i]->y += ELEMENT_SIZE;
             }*/
-
+            delete_one_line_elements(fl);
 
             downCounter = 0;
         }
@@ -81,13 +78,13 @@ int main (int argc, char ** args) {
                     case SDLK_DOWN:
                         int res = move_down_figure(figure);
                         if (res == 0) {
-                            figure = create_o_figure(FIGURE_START_X_POINT,FIGURE_START_Y_POINT);
                             fl_push(fl, figure);
+                            figure = create_o_figure(FIGURE_START_X_POINT,FIGURE_START_Y_POINT);
                         } else {
                             if (is_figure_intersect_list(fl, figure) == 1) {
                                 move_up_figure(figure);
-                                figure = create_o_figure(FIGURE_START_X_POINT,FIGURE_START_Y_POINT);
                                 fl_push(fl, figure);
+                                figure = create_o_figure(FIGURE_START_X_POINT,FIGURE_START_Y_POINT);
                             }
                         }
                         break;        
@@ -102,7 +99,21 @@ int main (int argc, char ** args) {
                 fprintf(stdout, "MOUSE BOTTON CLICKED");
             }
         }
-        printf("SIZE: (%d)", fl->size);
+        
+            Element *elements[4];
+            elements[0] = figure->e1;
+            elements[1] = figure->e2;
+            elements[2] = figure->e3;
+            elements[3] = figure->e4;
+            for (int j = 0; j < sizeof(elements) / sizeof(elements[0]); j++) {
+                SDL_Rect rect= {elements[j]->x, elements[j]->y,ELEMENT_SIZE,ELEMENT_SIZE};
+                SDL_Rect inrect= {elements[j]->x+1, elements[j]->y+1,ELEMENT_SIZE-1,ELEMENT_SIZE-1};
+
+                SDL_FillRect(screen_surface, &rect, SDL_MapRGB(screen_surface->format, 0x00, 0x00, 0x00));
+                SDL_FillRect(screen_surface, &inrect, SDL_MapRGB(screen_surface->format, 0xFF, 0x00, 0x00));
+
+            }
+
         for (int i = 0; i < fl->size; i++) {
             if (fl->figures[i] == NULL) {
                 break;
@@ -113,6 +124,7 @@ int main (int argc, char ** args) {
             elements[2] = fl->figures[i]->e3;
             elements[3] = fl->figures[i]->e4;
             for (int j = 0; j < sizeof(elements) / sizeof(elements[0]); j++) {
+                if (!elements[j])continue;
                 SDL_Rect rect= {elements[j]->x, elements[j]->y,ELEMENT_SIZE,ELEMENT_SIZE};
                 SDL_Rect inrect= {elements[j]->x+1, elements[j]->y+1,ELEMENT_SIZE-1,ELEMENT_SIZE-1};
 

@@ -40,3 +40,60 @@ int is_figure_intersect_list(FigureList * fl, Figure *figure) {
 
     return 0;
 }
+
+int delete_one_line_elements(FigureList *fl) {
+    int deletedLines = 0;
+
+    Element *elements[200];
+    int elementsSize = 0;
+
+    for (int i = 0; i < fl->size; i++) {
+        elements[elementsSize] = fl->figures[i]->e1;
+        elementsSize++;
+        elements[elementsSize] = fl->figures[i]->e2;
+        elementsSize++;
+        elements[elementsSize] = fl->figures[i]->e3;
+        elementsSize++;
+        elements[elementsSize] = fl->figures[i]->e4;
+        elementsSize++;
+    }
+    printf("elementsSize(%d)\n", elementsSize);
+    for (int i = 0; i < elementsSize; i++) {
+        int countInLine = 1;
+        printf("start on index(%d)\n", i);
+        for (int j = 0; j < elementsSize; j++) {
+            if (i == j) continue;
+
+            if (elements[j] && elements[i] && elements[j]->y == elements[i]->y) countInLine++;
+        }
+
+        printf("countInLine(%d)\n", countInLine);
+
+        if (countInLine == 10) {
+            int searchToDelete = elements[i]->y;
+            for (int j = 0; j < elementsSize; j++) {
+                printf("STARTED INTERNAL %d\n", j);
+                if (elements[j] && searchToDelete == elements[j]->y) {
+                    for (int fi = 0; fi < fl->size; fi++) {
+                        if (fl->figures[fi]->e1 == elements[j]) {
+                            fl->figures[fi]->e1 = NULL;
+                        } else if(fl->figures[fi]->e2 == elements[j]) {
+                            fl->figures[fi]->e2 = NULL;
+                        } else if(fl->figures[fi]->e3 == elements[j]) {
+                            fl->figures[fi]->e3 = NULL;
+                        } else if(fl->figures[fi]->e4 == elements[j]) {
+                            fl->figures[fi]->e4 = NULL;
+                        }
+                    }
+                    printf("DELETED ON Y(%d)", searchToDelete);
+                    delete_element(elements[j]);
+                    elements[j] = NULL;
+                }
+            }
+
+            deletedLines++;
+        }
+    }
+
+    return deletedLines;
+}

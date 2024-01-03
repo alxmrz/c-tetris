@@ -49,18 +49,37 @@ int move_right(Figure *figure) {
 }
 
 int move_down_figure(Figure *figure) {
-    if (figure->e1->y+ELEMENT_SIZE == GAME_BOTTOM_BORDER ||
-        figure->e2->y+ELEMENT_SIZE == GAME_BOTTOM_BORDER ||
-        figure->e3->y+ELEMENT_SIZE == GAME_BOTTOM_BORDER ||
-        figure->e4->y+ELEMENT_SIZE == GAME_BOTTOM_BORDER
-    ) {
+    if (figure->e1 && figure->e1->y+ELEMENT_SIZE == GAME_BOTTOM_BORDER) {
         return 0;
     }
 
-    figure->e1->y += ELEMENT_SIZE;
-    figure->e2->y += ELEMENT_SIZE;
-    figure->e3->y += ELEMENT_SIZE;
-    figure->e4->y += ELEMENT_SIZE;
+    if (figure->e2 && figure->e2->y+ELEMENT_SIZE == GAME_BOTTOM_BORDER) {
+         return 0;
+    }
+
+    if (figure->e3 && figure->e3->y+ELEMENT_SIZE == GAME_BOTTOM_BORDER) {
+         return 0;
+    }
+
+    if (figure->e4 && figure->e4->y+ELEMENT_SIZE == GAME_BOTTOM_BORDER) {
+         return 0;
+    }
+
+    if (figure->e1) {
+        figure->e1->y += ELEMENT_SIZE;
+    }
+    
+    if (figure->e2) {
+        figure->e2->y += ELEMENT_SIZE;
+    }
+
+    if (figure->e3) {
+        figure->e3->y += ELEMENT_SIZE;
+    }
+
+    if (figure->e4) {
+        figure->e4->y += ELEMENT_SIZE;
+    }
 
     return 1;
 }
@@ -91,6 +110,7 @@ int is_figures_intersected(Figure *f1, Figure *f2) {
 
     for (int i = 0; i < len; i++) {
         for (int j = 0; j < len; j++) {
+            if (!es1[i] || !es2[j]) continue;
             if (es1[i]->x == es2[j]->x && es1[i]->y == es2[j]->y) {
                 return 1;
             }
