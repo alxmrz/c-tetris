@@ -15,11 +15,11 @@ void delete_figure_list(FigureList * fl) {
 }
 
 int fl_push(FigureList *fl, Figure *figure) {
-    //TODO: надо сделать увеличение блока памяти при fl->size == fl->maxSize
     if (fl->size == fl->maxSize) {
         fl->maxSize *= 2;
         fl->figures = realloc(fl->figures, fl->maxSize * sizeof(Figure *));
     }
+
     fl->figures[fl->size] = figure;
     fl->size += 1;
 
