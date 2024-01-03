@@ -38,15 +38,38 @@ int main (int argc, char ** args) {
 
     SDL_Event windowEvent;
     float downCounter = 0.0;
+    float deleteCounter = 0.0;
     while (1) {
         SDL_UpdateWindowSurface(window);
         SDL_FillRect(screen_surface, NULL, SDL_MapRGB( screen_surface->format, 0, 255, 0));
 
-        if (downCounter >= 1000) {
-            /*for (int i = 0; i < sizeof(elements) / sizeof(Element); i++) {
-                elements[i]->y += ELEMENT_SIZE;
-            }*/
+        if (deleteCounter >500) {
             delete_one_line_elements(fl);
+            deleteCounter=0;
+        }
+
+        if (downCounter >= 1000) {
+            int res = move_down_figure(figure);
+            if (res == 0) {
+                fl_push(fl, figure);
+                figure = create_o_figure(FIGURE_START_X_POINT,FIGURE_START_Y_POINT);
+            } else {
+                if (is_figure_intersect_list(fl, figure) == 1) {
+                    move_up_figure(figure);
+                    fl_push(fl, figure);
+                    figure = create_o_figure(FIGURE_START_X_POINT,FIGURE_START_Y_POINT);
+                }
+            }
+
+            for (int i = 0; i < fl->size; i++) {
+                int res = move_down_figure(fl->figures[i]);
+                if (res == 1) {
+                    if (is_figure_intersect_list(fl, fl->figures[i]) == 1) {
+                        move_up_figure(fl->figures[i]);
+                    }
+                }
+            }
+
 
             downCounter = 0;
         }
@@ -150,6 +173,8 @@ int main (int argc, char ** args) {
         fflush(stdout); 
         SDL_Delay(10);
         downCounter += 10;
+        deleteCounter +=10;
+
     }
 
     delete_figure(figure);
