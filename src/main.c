@@ -68,9 +68,15 @@ int main (int argc, char ** args) {
                 {
                     case SDLK_LEFT:
                         move_left(figure);
+                        if (is_figure_intersect_list(fl, figure) == 1) {
+                            move_right(figure);
+                        }
                         break;
                     case SDLK_RIGHT:
                         move_right(figure);
+                        if (is_figure_intersect_list(fl, figure) == 1) {
+                            move_left(figure);
+                        }
                         break;
                     case SDLK_DOWN:
                         int res = move_down_figure(figure);
