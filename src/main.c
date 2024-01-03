@@ -77,6 +77,12 @@ int main (int argc, char ** args) {
                         if (res == 0) {
                             figure = create_o_figure(FIGURE_START_X_POINT,FIGURE_START_Y_POINT);
                             fl_push(fl, figure);
+                        } else {
+                            if (is_figure_intersect_list(fl, figure) == 1) {
+                                move_up_figure(figure);
+                                figure = create_o_figure(FIGURE_START_X_POINT,FIGURE_START_Y_POINT);
+                                fl_push(fl, figure);
+                            }
                         }
                         break;        
                     default:

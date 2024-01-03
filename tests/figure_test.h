@@ -142,4 +142,39 @@ static void test_figure_move_down_on_edge_position(void **state) {
     assert_int_equal(figure->e4->y, GAME_BOTTOM_BORDER-ELEMENT_SIZE);
 }
 
+static void test_figure_not_intersect_other_figure(void **state) {
+    Figure *figure = create_o_figure(200, 200);
+    Figure *figure1 = create_o_figure(125, 300);
+
+    int result = is_figures_intersected(figure, figure1);
+
+    assert_int_equal(0,0);
+}
+
+static void test_figure_intersect_other_figure(void **state) {
+    Figure *figure = create_o_figure(200, 200);
+    Figure *figure1 = create_o_figure(225, 200);
+
+    int result = is_figures_intersected(figure, figure1);
+
+    assert_int_equal(1,1);
+}
+
+static void test_figure_move_up(void **state) {
+    Figure *figure = create_o_figure(200, 200);
+    move_up_figure(figure);
+
+    assert_int_equal(figure->e1->x, 200);
+    assert_int_equal(figure->e1->y, 200 - ELEMENT_SIZE);
+
+    assert_int_equal(figure->e2->x, 200 + ELEMENT_SIZE);
+    assert_int_equal(figure->e2->y, 200 - ELEMENT_SIZE);
+
+    assert_int_equal(figure->e3->x, 200);
+    assert_int_equal(figure->e3->y, 225 - ELEMENT_SIZE);
+
+    assert_int_equal(figure->e4->x, 200 +ELEMENT_SIZE);
+    assert_int_equal(figure->e4->y, 225 - ELEMENT_SIZE);
+}
+
 #endif

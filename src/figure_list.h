@@ -16,5 +16,6 @@ FigureList * create_figure_list();
 void delete_figure_list(FigureList *);
 
 int fl_push(FigureList *fl, Figure *figure);
+int is_figure_intersect_list(FigureList * fl, Figure *figure);
 
 #endif

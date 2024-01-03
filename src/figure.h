@@ -13,11 +13,13 @@ typedef struct Figure {
 } Figure;
 
 
-Figure * create_o_figure(int x, int y);
-void delete_figure(Figure *figure);
+Figure * create_o_figure(int, int);
+void delete_figure(Figure *);
 
-int move_left (Figure *figure);
-int move_right (Figure *figure);
-int move_down_figure (Figure *figure);
+int move_left (Figure *);
+int move_right (Figure *);
+int move_down_figure (Figure *);
+int move_up_figure(Figure *);
+int is_figures_intersected(Figure *, Figure *);
 
 #endif

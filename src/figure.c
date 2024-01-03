@@ -64,3 +64,38 @@ int move_down_figure(Figure *figure) {
 
     return 1;
 }
+
+int move_up_figure(Figure *figure) {
+    figure->e1->y -= ELEMENT_SIZE;
+    figure->e2->y -= ELEMENT_SIZE;
+    figure->e3->y -= ELEMENT_SIZE;
+    figure->e4->y -= ELEMENT_SIZE;
+
+    return 1;
+}
+
+
+int is_figures_intersected(Figure *f1, Figure *f2) {
+    int len = 4;
+    Element *es1[len];
+    es1[0] = f1->e1;
+    es1[1] = f1->e2;
+    es1[2] = f1->e3;
+    es1[3] = f1->e4;
+
+    Element *es2[len];
+    es2[0] = f2->e1;
+    es2[1] = f2->e2;
+    es2[2] = f2->e3;
+    es2[3] = f2->e4;
+
+    for (int i = 0; i < len; i++) {
+        for (int j = 0; j < len; j++) {
+            if (es1[i]->x == es2[j]->x && es1[i]->y == es2[j]->y) {
+                return 1;
+            }
+        }
+    }
+
+    return 0;
+}
