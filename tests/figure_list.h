@@ -86,23 +86,20 @@ static void test_fl_figure_not_intersect_itself(void **state) {
 
 static void test_fl_delete_one_line_elements(void **state) {
     FigureList *fl = create_figure_list();
-    for (int i = 0; i < 10; i++) {
-        Figure *figure = create_o_figure(200+ELEMENT_SIZE*2, 200);
+    int offset = 0;
+    for (int i = 0; i < 5; i++) {
+        Figure *figure = create_o_figure(200+offset, 200);
         fl_push(fl, figure);
+        offset += ELEMENT_SIZE*2;
     }
 
     int actual = delete_one_line_elements(fl);
-    printf("%s\n", "AFTER DELEE IN TEST");
     assert_int_equal(2, actual);
+    assert_null(fl->figures[0]->e1);
     assert_null(fl->figures[1]->e1);
     assert_null(fl->figures[2]->e1);
     assert_null(fl->figures[3]->e1);
     assert_null(fl->figures[4]->e1);
-    assert_null(fl->figures[5]->e1);
-    assert_null(fl->figures[6]->e1);
-    assert_null(fl->figures[7]->e1);
-    assert_null(fl->figures[8]->e1);
-    assert_null(fl->figures[9]->e1);
 }
 
 #endif
