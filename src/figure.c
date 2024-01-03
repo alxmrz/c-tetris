@@ -1,7 +1,36 @@
 
 #include "figure.h"
 #include "malloc.h"
+#include "stdlib.h"
+#include "stdio.h"
 #include "configuration.h"
+
+static const int figure_types_count = 7;
+
+Figure * create_random_figure(int x, int y) {
+    int randNumber = rand() % figure_types_count;
+
+    switch (randNumber)
+    {
+        case 0:
+            return create_o_figure(x, y);
+        case 1:
+            return create_L_figure(x, y);
+        case 2:
+            return create_J_figure(x, y);
+        case 3:
+            return create_I_figure(x, y);
+        case 4:
+            return create_S_figure(x, y);
+        case 5:
+            return create_T_figure(x, y);
+        case 6:
+            return create_Z_figure(x, y);
+        default:
+            printf("Unexpected random number - %d!", randNumber);
+            return create_o_figure(x, y);
+    }
+}
 
 Figure * create_o_figure(int x, int y) {
     Figure * figure = malloc(sizeof(Figure));
@@ -14,14 +43,85 @@ Figure * create_o_figure(int x, int y) {
     return figure;
 }
 
+Figure * create_L_figure(int x, int y) {
+    Figure * figure = malloc(sizeof(Figure));
+
+    figure->e1 = create_element(x,y);
+    figure->e2 = create_element(x,y+ELEMENT_SIZE);
+    figure->e3 = create_element(x,y+ELEMENT_SIZE*2);
+    figure->e4 = create_element(x+ELEMENT_SIZE,y+ELEMENT_SIZE*2);
+
+    return figure;
+}
+
+Figure * create_J_figure(int x, int y) {
+    Figure * figure = malloc(sizeof(Figure));
+
+    figure->e1 = create_element(x,y);
+    figure->e2 = create_element(x,y+ELEMENT_SIZE);
+    figure->e3 = create_element(x,y+ELEMENT_SIZE*2);
+    figure->e4 = create_element(x-ELEMENT_SIZE,y+ELEMENT_SIZE*2);
+
+    return figure;
+}
+
+Figure * create_I_figure(int x, int y) {
+    Figure * figure = malloc(sizeof(Figure));
+
+    figure->e1 = create_element(x,y);
+    figure->e2 = create_element(x,y+ELEMENT_SIZE);
+    figure->e3 = create_element(x,y+ELEMENT_SIZE*2);
+    figure->e4 = create_element(x,y+ELEMENT_SIZE*3);
+
+    return figure;
+}
+
+Figure * create_S_figure(int x, int y) {
+    Figure * figure = malloc(sizeof(Figure));
+
+    figure->e1 = create_element(x,y+ELEMENT_SIZE);
+    figure->e2 = create_element(x+ELEMENT_SIZE,y);
+    figure->e3 = create_element(x+ELEMENT_SIZE,y+ELEMENT_SIZE);
+    figure->e4 = create_element(x+ELEMENT_SIZE*2,y);
+
+    return figure;
+}
+
+Figure * create_T_figure(int x, int y) {
+    Figure * figure = malloc(sizeof(Figure));
+
+    figure->e1 = create_element(x,y);
+    figure->e2 = create_element(x+ELEMENT_SIZE,y);
+    figure->e3 = create_element(x+ELEMENT_SIZE,y+ELEMENT_SIZE);
+    figure->e4 = create_element(x+ELEMENT_SIZE*2,y);
+
+    return figure;
+}
+
+Figure * create_Z_figure(int x, int y) {
+    Figure * figure = malloc(sizeof(Figure));
+
+    figure->e1 = create_element(x,y);
+    figure->e2 = create_element(x+ELEMENT_SIZE,y);
+    figure->e3 = create_element(x+ELEMENT_SIZE,y+ELEMENT_SIZE);
+    figure->e4 = create_element(x+ELEMENT_SIZE*2,y+ELEMENT_SIZE);
+
+    return figure;
+}
+
 void delete_figure(Figure *figure) {
     free(figure);
 }
 
 int move_left(Figure *figure) {
-   if (figure->e1->x == GAME_LEFT_BORDER) {
+    // TODO: need test for this condition
+    if (figure->e1->x == GAME_LEFT_BORDER ||
+        figure->e2->x == GAME_LEFT_BORDER ||
+        figure->e3->x == GAME_LEFT_BORDER ||
+        figure->e4->x == GAME_LEFT_BORDER
+    ) {
     return 0;
-   }
+    }
 
    figure->e1->x -= ELEMENT_SIZE;
    figure->e2->x -= ELEMENT_SIZE;

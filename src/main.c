@@ -34,7 +34,7 @@ int main (int argc, char ** args) {
     }*/
 
     FigureList *fl = create_figure_list();
-    Figure *figure = create_o_figure(FIGURE_START_X_POINT,FIGURE_START_Y_POINT);
+    Figure *figure = create_random_figure(FIGURE_START_X_POINT,FIGURE_START_Y_POINT);
 
     SDL_Event windowEvent;
     float downCounter = 0.0;
@@ -52,12 +52,12 @@ int main (int argc, char ** args) {
             int res = move_down_figure(figure);
             if (res == 0) {
                 fl_push(fl, figure);
-                figure = create_o_figure(FIGURE_START_X_POINT,FIGURE_START_Y_POINT);
+                figure = create_random_figure(FIGURE_START_X_POINT,FIGURE_START_Y_POINT);
             } else {
                 if (is_figure_intersect_list(fl, figure) == 1) {
                     move_up_figure(figure);
                     fl_push(fl, figure);
-                    figure = create_o_figure(FIGURE_START_X_POINT,FIGURE_START_Y_POINT);
+                    figure = create_random_figure(FIGURE_START_X_POINT,FIGURE_START_Y_POINT);
                 }
             }
 
@@ -102,12 +102,12 @@ int main (int argc, char ** args) {
                         int res = move_down_figure(figure);
                         if (res == 0) {
                             fl_push(fl, figure);
-                            figure = create_o_figure(FIGURE_START_X_POINT,FIGURE_START_Y_POINT);
+                            figure = create_random_figure(FIGURE_START_X_POINT,FIGURE_START_Y_POINT);
                         } else {
                             if (is_figure_intersect_list(fl, figure) == 1) {
                                 move_up_figure(figure);
                                 fl_push(fl, figure);
-                                figure = create_o_figure(FIGURE_START_X_POINT,FIGURE_START_Y_POINT);
+                                figure = create_random_figure(FIGURE_START_X_POINT,FIGURE_START_Y_POINT);
                             }
                         }
                         break;        

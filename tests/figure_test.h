@@ -21,7 +21,103 @@ static void test_create_figure_O(void **state) {
     assert_int_equal(figure->e4->x, ELEMENT_SIZE);
     assert_int_equal(figure->e4->y, ELEMENT_SIZE);
 }
- 
+
+static void test_create_figure_L(void **state) {
+    Figure *figure = create_L_figure(0,0);
+
+    assert_int_equal(figure->e1->x, 0);
+    assert_int_equal(figure->e1->y, 0);
+
+    assert_int_equal(figure->e2->x, 0);
+    assert_int_equal(figure->e2->y, ELEMENT_SIZE);
+
+    assert_int_equal(figure->e3->x, 0);
+    assert_int_equal(figure->e3->y, ELEMENT_SIZE*2);
+
+    assert_int_equal(figure->e4->x, ELEMENT_SIZE);
+    assert_int_equal(figure->e4->y, ELEMENT_SIZE*2);
+}
+
+static void test_create_figure_J(void **state) {
+    Figure *figure = create_J_figure(ELEMENT_SIZE,0);
+
+    assert_int_equal(figure->e1->x, ELEMENT_SIZE);
+    assert_int_equal(figure->e1->y, 0);
+
+    assert_int_equal(figure->e2->x, ELEMENT_SIZE);
+    assert_int_equal(figure->e2->y, ELEMENT_SIZE);
+
+    assert_int_equal(figure->e3->x, ELEMENT_SIZE);
+    assert_int_equal(figure->e3->y, ELEMENT_SIZE*2);
+
+    assert_int_equal(figure->e4->x, 0);
+    assert_int_equal(figure->e4->y, ELEMENT_SIZE*2);
+}
+
+static void test_create_figure_I(void **state) {
+    Figure *figure = create_I_figure(0,0);
+
+    assert_int_equal(figure->e1->x, 0);
+    assert_int_equal(figure->e1->y, 0);
+
+    assert_int_equal(figure->e2->x, 0);
+    assert_int_equal(figure->e2->y, ELEMENT_SIZE);
+
+    assert_int_equal(figure->e3->x, 0);
+    assert_int_equal(figure->e3->y, ELEMENT_SIZE*2);
+
+    assert_int_equal(figure->e4->x, 0);
+    assert_int_equal(figure->e4->y, ELEMENT_SIZE*3);
+}
+
+static void test_create_figure_S(void **state) {
+    Figure *figure = create_S_figure(0,0);
+
+    assert_int_equal(figure->e1->x, 0);
+    assert_int_equal(figure->e1->y, ELEMENT_SIZE);
+
+    assert_int_equal(figure->e2->x, ELEMENT_SIZE);
+    assert_int_equal(figure->e2->y, 0);
+
+    assert_int_equal(figure->e3->x, ELEMENT_SIZE);
+    assert_int_equal(figure->e3->y, ELEMENT_SIZE);
+
+    assert_int_equal(figure->e4->x, ELEMENT_SIZE*2);
+    assert_int_equal(figure->e4->y, 0);
+}
+
+static void test_create_figure_T(void **state) {
+    Figure *figure = create_T_figure(0,0);
+
+    assert_int_equal(figure->e1->x, 0);
+    assert_int_equal(figure->e1->y, 0);
+
+    assert_int_equal(figure->e2->x, ELEMENT_SIZE);
+    assert_int_equal(figure->e2->y, 0);
+
+    assert_int_equal(figure->e3->x, ELEMENT_SIZE);
+    assert_int_equal(figure->e3->y, ELEMENT_SIZE);
+
+    assert_int_equal(figure->e4->x, ELEMENT_SIZE*2);
+    assert_int_equal(figure->e4->y, 0);
+}
+
+static void test_create_figure_Z(void **state) {
+    Figure *figure = create_Z_figure(0,0);
+
+    assert_int_equal(figure->e1->x, 0);
+    assert_int_equal(figure->e1->y, 0);
+
+    assert_int_equal(figure->e2->x, ELEMENT_SIZE);
+    assert_int_equal(figure->e2->y, 0);
+
+    assert_int_equal(figure->e3->x, ELEMENT_SIZE);
+    assert_int_equal(figure->e3->y, ELEMENT_SIZE);
+
+    assert_int_equal(figure->e4->x, ELEMENT_SIZE*2);
+    assert_int_equal(figure->e4->y, ELEMENT_SIZE);
+}
+
 static void test_figure_move_left_on_edge_position(void **state) {
     Figure *figure = create_o_figure(GAME_LEFT_BORDER,0);
 

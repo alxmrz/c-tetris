@@ -39,6 +39,12 @@ static void test_array(void **state) {
 int main(void) {
     const struct CMUnitTest tests[] = {
         cmocka_unit_test(test_create_figure_O),
+        cmocka_unit_test(test_create_figure_L),
+        cmocka_unit_test(test_create_figure_J),
+        cmocka_unit_test(test_create_figure_I),
+        cmocka_unit_test(test_create_figure_S),
+        cmocka_unit_test(test_create_figure_T),
+        cmocka_unit_test(test_create_figure_Z),
         cmocka_unit_test(test_element_moving_down),
         cmocka_unit_test(test_figure_move_left_on_edge_position),
         cmocka_unit_test(test_figure_move_left_on_none_edge_position),
