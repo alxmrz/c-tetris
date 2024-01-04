@@ -273,4 +273,11 @@ static void test_figure_move_up(void **state) {
     assert_int_equal(figure->e4->y, 225 - ELEMENT_SIZE);
 }
 
+static void test_not_full_figure_move_up(void **state) {
+    Figure *figure = malloc(sizeof(Figure));
+
+    assert_int_equal(1, move_up_figure(figure));
+    free(figure);
+}
+
 #endif

@@ -185,10 +185,21 @@ int move_down_figure(Figure *figure) {
 }
 
 int move_up_figure(Figure *figure) {
-    figure->e1->y -= ELEMENT_SIZE;
-    figure->e2->y -= ELEMENT_SIZE;
-    figure->e3->y -= ELEMENT_SIZE;
-    figure->e4->y -= ELEMENT_SIZE;
+    if (figure->e1) {
+        figure->e1->y -= ELEMENT_SIZE;
+    }
+
+    if (figure->e2) {
+        figure->e2->y -= ELEMENT_SIZE;
+    }
+
+    if (figure->e3) {
+        figure->e3->y -= ELEMENT_SIZE;
+    }
+
+    if (figure->e4) {
+        figure->e4->y -= ELEMENT_SIZE;
+    }
 
     return 1;
 }

@@ -55,6 +55,7 @@ int main(void) {
         cmocka_unit_test(test_figure_not_intersect_other_figure),
         cmocka_unit_test(test_figure_intersect_other_figure),
         cmocka_unit_test(test_figure_move_up),
+        cmocka_unit_test(test_not_full_figure_move_up),
         cmocka_unit_test(test_array),
         cmocka_unit_test(test_fl_create_figure_list),
         cmocka_unit_test(test_fl_delete_figure_list),
