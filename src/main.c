@@ -105,7 +105,7 @@ int print_game_over(SDL_Renderer *renderer)
     print_text("Press <Space> to restart", &helperMessageRect, renderer, &color);
 }
 
-int game_update(FigureList *fl, Figure **figure, SDL_Event *windowEvent, int *deleteCounter, int *downCounter, int *score)
+void game_update(FigureList *fl, Figure **figure, SDL_Event *windowEvent, int *deleteCounter, int *downCounter, int *score)
 {
     if (*deleteCounter > 500)
     {
@@ -145,8 +145,6 @@ int game_update(FigureList *fl, Figure **figure, SDL_Event *windowEvent, int *de
 
         *downCounter = 0;
     }
-
-    return 1;
 }
 
 void start_new_game(FigureList **fl, Figure **figure, int *deleteCounter, int *downCounter, int *score)
@@ -207,11 +205,7 @@ int main(int argc, char **args)
     {
         if (!gameOver)
         {
-            int result = game_update(fl, &figure, &windowEvent, &deleteCounter, &downCounter, &score);
-            if (result == 0)
-            {
-                break;
-            }
+            game_update(fl, &figure, &windowEvent, &deleteCounter, &downCounter, &score);
         }
         if (SDL_PollEvent(&windowEvent))
         {
