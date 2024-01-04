@@ -11,6 +11,9 @@ FigureList * create_figure_list() {
 }
 
 void delete_figure_list(FigureList * fl) {
+    for (int i = 0; i < fl->size; i++) {
+        delete_figure(fl->figures[i]);
+    }
     free(fl);
 }
 
