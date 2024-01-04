@@ -1,5 +1,7 @@
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 #include <unistd.h>
+#include <stdio.h>
 #include "element.h"
 #include "figure.h"
 #include "figure_list.h"
@@ -15,6 +17,13 @@ int main (int argc, char ** args) {
         return 1;
     }
 
+    if (TTF_Init() != 0)
+    {
+        printf("%s", "Cant intitialize TTF_init");
+        SDL_Quit();
+        return 1;
+    }
+
     SDL_Surface* screen_surface = NULL;
 
     SDL_Window* window = NULL;
@@ -27,21 +36,45 @@ int main (int argc, char ** args) {
         return 1;
     }
 
-    screen_surface = SDL_GetWindowSurface(window);
-    /*SDL_Renderer *ren = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    TTF_Font* Sans = TTF_OpenFont("./sources/Sans.ttf", 24);
+    if (Sans == NULL) {
+        printf("Error on font creation: %s", TTF_GetError());
+        TTF_Quit();
+        SDL_Quit();
+        return 1;
+    }
+    SDL_Renderer *ren = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     if (ren == NULL) {
         return 0;
-    }*/
+    }
 
     FigureList *fl = create_figure_list();
     Figure *figure = create_random_figure(FIGURE_START_X_POINT,FIGURE_START_Y_POINT);
-
+    
     SDL_Event windowEvent;
     float downCounter = 0.0;
     float deleteCounter = 0.0;
+
+
+    SDL_Color titleColor = {0, 0, 0xFF, 0};
+    SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Sans, "Tetris", titleColor);
+    SDL_Texture* message = SDL_CreateTextureFromSurface(ren, surfaceMessage);
+    if (message == NULL) {
+        printf("Cant init texture: %s", SDL_GetError());
+        TTF_Quit();
+        SDL_Quit();
+        return 1;
+    }
+    SDL_Rect messageRect = {125, 0, 200, 100};
+
     while (1) {
         SDL_UpdateWindowSurface(window);
-        SDL_FillRect(screen_surface, NULL, SDL_MapRGB( screen_surface->format, 0, 255, 0));
+        //SDL_FillRect(screen_surface, NULL, SDL_MapRGB( screen_surface->format, 0, 255, 0));
+        SDL_SetRenderDrawColor(ren, 255, 255, 0, 0);
+        SDL_Rect mainRect = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
+        if (SDL_RenderFillRect(ren, &mainRect) < 0) {
+            printf("ERROR: (%s)", SDL_GetError());
+        }
 
         if (deleteCounter >500) {
             delete_one_line_elements(fl);
@@ -132,9 +165,11 @@ int main (int argc, char ** args) {
                 SDL_Rect rect= {elements[j]->x, elements[j]->y,ELEMENT_SIZE,ELEMENT_SIZE};
                 SDL_Rect inrect= {elements[j]->x+1, elements[j]->y+1,ELEMENT_SIZE-1,ELEMENT_SIZE-1};
 
-                SDL_FillRect(screen_surface, &rect, SDL_MapRGB(screen_surface->format, 0x00, 0x00, 0x00));
-                SDL_FillRect(screen_surface, &inrect, SDL_MapRGB(screen_surface->format, 0xFF, 0x00, 0x00));
+                SDL_SetRenderDrawColor(ren, 0, 0, 0, 0);
+                SDL_RenderFillRect(ren, &rect);
 
+                SDL_SetRenderDrawColor(ren, 0xFF, 0, 0, 0);
+                SDL_RenderFillRect(ren, &inrect); 
             }
 
         for (int i = 0; i < fl->size; i++) {
@@ -151,24 +186,26 @@ int main (int argc, char ** args) {
                 SDL_Rect rect= {elements[j]->x, elements[j]->y,ELEMENT_SIZE,ELEMENT_SIZE};
                 SDL_Rect inrect= {elements[j]->x+1, elements[j]->y+1,ELEMENT_SIZE-1,ELEMENT_SIZE-1};
 
-                SDL_FillRect(screen_surface, &rect, SDL_MapRGB(screen_surface->format, 0x00, 0x00, 0x00));
-                SDL_FillRect(screen_surface, &inrect, SDL_MapRGB(screen_surface->format, 0xFF, 0x00, 0x00));
+                SDL_SetRenderDrawColor(ren, 0, 0, 0, 0);
+                SDL_RenderFillRect(ren, &rect);
+
+                SDL_SetRenderDrawColor(ren, 0xFF, 0, 0, 0);
+                SDL_RenderFillRect(ren, &inrect);
 
             }
 
 
         }
-        SDL_Rect rect1 = {GAME_LEFT_BORDER, FIGURE_START_Y_POINT, 1, GAME_BOTTOM_BORDER-FIGURE_START_Y_POINT};
-        SDL_Rect rect2 = {GAME_LEFT_BORDER, GAME_BOTTOM_BORDER, GAME_RIGHT_BORDER-GAME_LEFT_BORDER, 1};
-        SDL_Rect rect3 = {GAME_RIGHT_BORDER, FIGURE_START_Y_POINT, 1, GAME_BOTTOM_BORDER-FIGURE_START_Y_POINT};
 
-        SDL_FillRect(screen_surface, &rect1, SDL_MapRGB(screen_surface->format, 0x00, 0x00, 0x00));
-        SDL_FillRect(screen_surface, &rect2, SDL_MapRGB(screen_surface->format, 0x00, 0x00, 0x00));
-        SDL_FillRect(screen_surface, &rect3, SDL_MapRGB(screen_surface->format, 0x00, 0x00, 0x00));
+        SDL_Rect outer_rect = {GAME_LEFT_BORDER, FIGURE_START_Y_POINT, ELEMENT_SIZE * 10 , ELEMENT_SIZE * 20};
+        SDL_SetRenderDrawColor(ren, 0, 0, 0, 0);
+        SDL_RenderDrawRect(ren, &outer_rect);
+        
+        if (SDL_RenderCopy(ren, message, NULL, &messageRect) != 0 ) {
+            printf("Error on render copy: %s\n", SDL_GetError());
+        };
 
-
-        /*SDL_SetRenderDrawColor(ren, 0xFF, 0xFF, 0xFF, 0xFF);
-        SDL_RenderDrawLine(ren, 0, 0, 50, 50);*/
+        SDL_RenderPresent(ren);
 
         fflush(stdout); 
         SDL_Delay(10);
@@ -176,7 +213,11 @@ int main (int argc, char ** args) {
         deleteCounter +=10;
 
     }
-
+    TTF_CloseFont(Sans);
+    TTF_Quit();
+    SDL_FreeSurface(surfaceMessage);
+    SDL_DestroyTexture(message);
+    SDL_DestroyRenderer(ren);
     delete_figure(figure);
     SDL_Quit();
     SDL_DestroyWindow(window);
