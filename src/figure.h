@@ -6,6 +6,7 @@
 #define MOVE_STEP 1
 
 typedef struct Figure {
+    char type;
     Element *e1;
     Element *e2;
     Element *e3;

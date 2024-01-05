@@ -35,6 +35,7 @@ Figure * create_random_figure(int x, int y) {
 Figure * create_o_figure(int x, int y) {
     Figure * figure = malloc(sizeof(Figure));
 
+    figure->type = 'O';
     figure->e1 = create_element(x,y);
     figure->e2 = create_element(x+ELEMENT_SIZE,y);
     figure->e3 = create_element(x,y+ELEMENT_SIZE);
@@ -46,6 +47,7 @@ Figure * create_o_figure(int x, int y) {
 Figure * create_L_figure(int x, int y) {
     Figure * figure = malloc(sizeof(Figure));
 
+    figure->type = 'L';
     figure->e1 = create_element(x,y);
     figure->e2 = create_element(x,y+ELEMENT_SIZE);
     figure->e3 = create_element(x,y+ELEMENT_SIZE*2);
@@ -57,6 +59,7 @@ Figure * create_L_figure(int x, int y) {
 Figure * create_J_figure(int x, int y) {
     Figure * figure = malloc(sizeof(Figure));
 
+    figure->type = 'J';
     figure->e1 = create_element(x,y);
     figure->e2 = create_element(x,y+ELEMENT_SIZE);
     figure->e3 = create_element(x,y+ELEMENT_SIZE*2);
@@ -68,6 +71,7 @@ Figure * create_J_figure(int x, int y) {
 Figure * create_I_figure(int x, int y) {
     Figure * figure = malloc(sizeof(Figure));
 
+    figure->type = 'I';
     figure->e1 = create_element(x,y);
     figure->e2 = create_element(x,y+ELEMENT_SIZE);
     figure->e3 = create_element(x,y+ELEMENT_SIZE*2);
@@ -79,6 +83,7 @@ Figure * create_I_figure(int x, int y) {
 Figure * create_S_figure(int x, int y) {
     Figure * figure = malloc(sizeof(Figure));
 
+    figure->type = 'S';
     figure->e1 = create_element(x,y+ELEMENT_SIZE);
     figure->e2 = create_element(x+ELEMENT_SIZE,y);
     figure->e3 = create_element(x+ELEMENT_SIZE,y+ELEMENT_SIZE);
@@ -90,6 +95,7 @@ Figure * create_S_figure(int x, int y) {
 Figure * create_T_figure(int x, int y) {
     Figure * figure = malloc(sizeof(Figure));
 
+    figure->type = 'T';
     figure->e1 = create_element(x,y);
     figure->e2 = create_element(x+ELEMENT_SIZE,y);
     figure->e3 = create_element(x+ELEMENT_SIZE,y+ELEMENT_SIZE);
@@ -101,6 +107,7 @@ Figure * create_T_figure(int x, int y) {
 Figure * create_Z_figure(int x, int y) {
     Figure * figure = malloc(sizeof(Figure));
 
+    figure->type = 'Z';
     figure->e1 = create_element(x,y);
     figure->e2 = create_element(x+ELEMENT_SIZE,y);
     figure->e3 = create_element(x+ELEMENT_SIZE,y+ELEMENT_SIZE);

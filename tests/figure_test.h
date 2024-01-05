@@ -9,6 +9,8 @@
 static void test_create_figure_O(void **state) {
     Figure *figure = create_o_figure(0,0);
 
+    assert_int_equal('O', figure->type);
+
     assert_int_equal(figure->e1->x, 0);
     assert_int_equal(figure->e1->y, 0);
 
@@ -24,6 +26,8 @@ static void test_create_figure_O(void **state) {
 
 static void test_create_figure_L(void **state) {
     Figure *figure = create_L_figure(0,0);
+
+    assert_int_equal('L', figure->type);
 
     assert_int_equal(figure->e1->x, 0);
     assert_int_equal(figure->e1->y, 0);
@@ -41,6 +45,8 @@ static void test_create_figure_L(void **state) {
 static void test_create_figure_J(void **state) {
     Figure *figure = create_J_figure(ELEMENT_SIZE,0);
 
+    assert_int_equal('J', figure->type);
+
     assert_int_equal(figure->e1->x, ELEMENT_SIZE);
     assert_int_equal(figure->e1->y, 0);
 
@@ -56,6 +62,8 @@ static void test_create_figure_J(void **state) {
 
 static void test_create_figure_I(void **state) {
     Figure *figure = create_I_figure(0,0);
+
+    assert_int_equal('I', figure->type);
 
     assert_int_equal(figure->e1->x, 0);
     assert_int_equal(figure->e1->y, 0);
@@ -73,6 +81,8 @@ static void test_create_figure_I(void **state) {
 static void test_create_figure_S(void **state) {
     Figure *figure = create_S_figure(0,0);
 
+    assert_int_equal('S', figure->type);
+
     assert_int_equal(figure->e1->x, 0);
     assert_int_equal(figure->e1->y, ELEMENT_SIZE);
 
@@ -89,6 +99,8 @@ static void test_create_figure_S(void **state) {
 static void test_create_figure_T(void **state) {
     Figure *figure = create_T_figure(0,0);
 
+    assert_int_equal('T', figure->type);
+
     assert_int_equal(figure->e1->x, 0);
     assert_int_equal(figure->e1->y, 0);
 
@@ -104,6 +116,8 @@ static void test_create_figure_T(void **state) {
 
 static void test_create_figure_Z(void **state) {
     Figure *figure = create_Z_figure(0,0);
+
+    assert_int_equal('Z', figure->type);
 
     assert_int_equal(figure->e1->x, 0);
     assert_int_equal(figure->e1->y, 0);

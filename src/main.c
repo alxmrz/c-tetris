@@ -105,6 +105,57 @@ int print_game_over(SDL_Renderer *renderer)
     print_text("Press <Space> to restart", &helperMessageRect, renderer, &color);
 }
 
+SDL_Color get_figure_color(Figure *figure)
+{
+    SDL_Color color;
+    switch (figure->type)
+    {
+    case 'O':
+        color.r = 0xFF;
+        color.g = 0x00;
+        color.b = 0x00;
+        break;
+    case 'I':
+        color.r = 0x00;
+        color.g = 0xFF;
+        color.b = 0x00;
+        break;
+    case 'J':
+        color.r = 0x00;
+        color.g = 0x00;
+        color.b = 0xFF;
+        break;
+    case 'L':
+        color.r = 0xFF;
+        color.g = 0x00;
+        color.b = 0xFF;
+        break;
+    case 'S':
+        color.r = 0x00;
+        color.g = 0xFF;
+        color.b = 0xFF;
+        break;
+    case 'T':
+        color.r = 0xFF;
+        color.g = 0xFF;
+        color.b = 0xFF;
+        break;
+    case 'Z':
+        color.r = 0xFF;
+        color.g = 0x0F;
+        color.b = 0xF0;
+        break;
+
+    default:
+        color.r = 0xFF;
+        color.g = 0x00;
+        color.b = 0x00;
+        break;
+    }
+
+    return color;
+}
+
 void game_update(FigureList *fl, Figure **figure, SDL_Event *windowEvent, int *deleteCounter, int *downCounter, int *score)
 {
     if (*deleteCounter > 500)
@@ -209,17 +260,18 @@ int main(int argc, char **args)
         }
         if (SDL_PollEvent(&windowEvent))
         {
+            
             if (SDL_QUIT == windowEvent.type)
             {
                 fprintf(stdout, "clickQuit");
                 break;
             }
-
             if (SDL_KEYDOWN == windowEvent.type)
             {
                 switch (windowEvent.key.keysym.sym)
                 {
                 case SDLK_LEFT:
+                    if (gameOver) break;
                     move_left(figure);
                     if (is_figure_intersect_list(fl, figure) == 1)
                     {
@@ -227,6 +279,7 @@ int main(int argc, char **args)
                     }
                     break;
                 case SDLK_RIGHT:
+                    if (gameOver) break;
                     move_right(figure);
                     if (is_figure_intersect_list(fl, figure) == 1)
                     {
@@ -234,6 +287,7 @@ int main(int argc, char **args)
                     }
                     break;
                 case SDLK_DOWN:
+                    if (gameOver) break;
                     int res = move_down_figure(figure);
                     if (res == 0)
                     {
@@ -265,7 +319,7 @@ int main(int argc, char **args)
             }
         }
         SDL_UpdateWindowSurface(window);
-        SDL_SetRenderDrawColor(ren, 255, 255, 0, 0);
+        SDL_SetRenderDrawColor(ren, 160, 160, 160, 0);
         SDL_Rect mainRect = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
         if (SDL_RenderFillRect(ren, &mainRect) < 0)
         {
@@ -280,16 +334,14 @@ int main(int argc, char **args)
         elements[1] = figure->e2;
         elements[2] = figure->e3;
         elements[3] = figure->e4;
+        SDL_Color fColor = get_figure_color(figure);
         for (int j = 0; j < sizeof(elements) / sizeof(elements[0]); j++)
         {
-            SDL_Rect rect = {elements[j]->x, elements[j]->y, ELEMENT_SIZE, ELEMENT_SIZE};
-            SDL_Rect inrect = {elements[j]->x + 1, elements[j]->y + 1, ELEMENT_SIZE - 1, ELEMENT_SIZE - 1};
-
-            SDL_SetRenderDrawColor(ren, 0, 0, 0, 0);
+            SDL_Rect rect = {elements[j]->x + 1, elements[j]->y + 1, ELEMENT_SIZE - 2, ELEMENT_SIZE - 2};
+            SDL_SetRenderDrawColor(ren, fColor.r, fColor.g, fColor.b, 0);
             SDL_RenderFillRect(ren, &rect);
-
-            SDL_SetRenderDrawColor(ren, 0xFF, 0, 0, 0);
-            SDL_RenderFillRect(ren, &inrect);
+            SDL_SetRenderDrawColor(ren, 0, 0, 0, 0);
+            SDL_RenderDrawRect(ren, &rect);
         }
 
         for (int i = 0; i < fl->size; i++)
@@ -303,18 +355,16 @@ int main(int argc, char **args)
             elements[1] = fl->figures[i]->e2;
             elements[2] = fl->figures[i]->e3;
             elements[3] = fl->figures[i]->e4;
+            SDL_Color fColor = get_figure_color(fl->figures[i]);
             for (int j = 0; j < sizeof(elements) / sizeof(elements[0]); j++)
             {
-                if (!elements[j])
-                    continue;
-                SDL_Rect rect = {elements[j]->x, elements[j]->y, ELEMENT_SIZE, ELEMENT_SIZE};
-                SDL_Rect inrect = {elements[j]->x + 1, elements[j]->y + 1, ELEMENT_SIZE - 1, ELEMENT_SIZE - 1};
+                if (!elements[j]) continue;
 
-                SDL_SetRenderDrawColor(ren, 0, 0, 0, 0);
+                SDL_Rect rect = {elements[j]->x + 1, elements[j]->y + 1, ELEMENT_SIZE - 2, ELEMENT_SIZE - 2};
+                SDL_SetRenderDrawColor(ren, fColor.r, fColor.g, fColor.b, 0);
                 SDL_RenderFillRect(ren, &rect);
-
-                SDL_SetRenderDrawColor(ren, 0xFF, 0, 0, 0);
-                SDL_RenderFillRect(ren, &inrect);
+                SDL_SetRenderDrawColor(ren, 0, 0, 0, 0);
+                SDL_RenderDrawRect(ren, &rect);
             }
         }
 
