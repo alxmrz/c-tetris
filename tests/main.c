@@ -3,41 +3,15 @@
 #include <stdint.h>
 #include <setjmp.h>
 #include <cmocka.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include "../src/figure.h"
-#include "../src/configuration.h"
 
 #include "element_test.h"
 #include "figure_test.h"
 #include "figure_list.h"
+#include "game_test.h"
 
-/********************* Vector TESTS ********************************/
-
-static void test_array(void **state) {
-    int eSize = 10;
-    Element *elements[eSize];
-
-    for (int i = 0; i < eSize; i++) {
-        Element * e = create_element(i, i);
-        elements[i] = e;
-    }
-
-    for (int i = 0; i < eSize; i++) {
-        if (elements[i]->x == 4) {
-            free(elements[i]);
-            elements[i] = NULL;   
-        }
-    }
-
-    assert_null(elements[4]);
-}
-
-
-
-/****************************MAIN*****************************************/
-int main(void) {
-    const struct CMUnitTest tests[] = {
+int main(void)
+{
+    const struct CMUnitTest figure_tests[] = {
         cmocka_unit_test(test_create_figure_O),
         cmocka_unit_test(test_create_figure_L),
         cmocka_unit_test(test_create_figure_J),
@@ -45,7 +19,6 @@ int main(void) {
         cmocka_unit_test(test_create_figure_S),
         cmocka_unit_test(test_create_figure_T),
         cmocka_unit_test(test_create_figure_Z),
-        cmocka_unit_test(test_element_moving_down),
         cmocka_unit_test(test_figure_move_left_on_edge_position),
         cmocka_unit_test(test_figure_move_left_on_none_edge_position),
         cmocka_unit_test(test_figure_move_right_on_edge_position),
@@ -56,7 +29,13 @@ int main(void) {
         cmocka_unit_test(test_figure_intersect_other_figure),
         cmocka_unit_test(test_figure_move_up),
         cmocka_unit_test(test_not_full_figure_move_up),
-        cmocka_unit_test(test_array),
+    };
+
+    const struct CMUnitTest element_tests[] = {
+        cmocka_unit_test(test_element_moving_down),
+    };
+
+    const struct CMUnitTest figure_list_tests[] = {
         cmocka_unit_test(test_fl_create_figure_list),
         cmocka_unit_test(test_fl_delete_figure_list),
         cmocka_unit_test(test_fl_is_figure_intersect_list),
@@ -65,6 +44,16 @@ int main(void) {
         cmocka_unit_test(test_fl_delete_one_line_elements),
         cmocka_unit_test(test_fl_push),
     };
- 
-    return cmocka_run_group_tests(tests, NULL, NULL);
+
+    const struct CMUnitTest game_tests[] = {
+        cmocka_unit_test(test_create_new_game),
+        cmocka_unit_test(test_delete_game),
+    };
+
+    int ft = cmocka_run_group_tests(figure_tests, NULL, NULL);
+    int et = cmocka_run_group_tests(element_tests, NULL, NULL);
+    int flt = cmocka_run_group_tests(figure_list_tests, NULL, NULL);
+    int gt = cmocka_run_group_tests(game_tests, NULL, NULL);
+
+    return (ft + et + flt + gt) >= 1;
 }

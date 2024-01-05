@@ -6,9 +6,7 @@
 #include "figure.h"
 #include "figure_list.h"
 #include "configuration.h"
-
-#define SUCCESS_CODE 0
-#define ERROR_CODE 1
+#include "game.h"
 
 const int SCREEN_WIDTH = WINDOW_WIDTH;
 const int SCREEN_HEIGHT = WINDOW_HEIGHT;
@@ -103,6 +101,8 @@ int print_game_over(SDL_Renderer *renderer)
 
     print_text("Game Over", &messageRect, renderer, &color);
     print_text("Press <Space> to restart", &helperMessageRect, renderer, &color);
+
+    return 1;
 }
 
 SDL_Color get_figure_color(Figure *figure)
@@ -156,58 +156,67 @@ SDL_Color get_figure_color(Figure *figure)
     return color;
 }
 
-void game_update(FigureList *fl, Figure **figure, SDL_Event *windowEvent, int *deleteCounter, int *downCounter, int *score)
+void draw_figure(Figure *figure, SDL_Renderer *renderer)
 {
-    if (*deleteCounter > 500)
+    Element *elements[4];
+    elements[0] = figure->e1;
+    elements[1] = figure->e2;
+    elements[2] = figure->e3;
+    elements[3] = figure->e4;
+    SDL_Color fColor = get_figure_color(figure);
+    for (int j = 0; j < sizeof(elements) / sizeof(elements[0]); j++)
     {
-        *score += delete_one_line_elements(fl) * 100;
-        *deleteCounter = 0;
-    }
-
-    if (*downCounter >= 1000)
-    {
-        int res = move_down_figure(*figure);
-        if (res == 0)
+        if (!elements[j])
         {
-            fl_push(fl, *figure);
-            *figure = create_random_figure(FIGURE_START_X_POINT, FIGURE_START_Y_POINT);
-        }
-        else
-        {
-            if (is_figure_intersect_list(fl, *figure) == 1)
-            {
-                move_up_figure(*figure);
-                fl_push(fl, *figure);
-                *figure = create_random_figure(FIGURE_START_X_POINT, FIGURE_START_Y_POINT);
-            }
+            continue;
         }
 
-        for (int i = 0; i < fl->size; i++)
-        {
-            int res = move_down_figure(fl->figures[i]);
-            if (res == 1)
-            {
-                if (is_figure_intersect_list(fl, fl->figures[i]) == 1)
-                {
-                    move_up_figure(fl->figures[i]);
-                }
-            }
-        }
-
-        *downCounter = 0;
+        SDL_Rect rect = {elements[j]->x + 1, elements[j]->y + 1, ELEMENT_SIZE - 2, ELEMENT_SIZE - 2};
+        SDL_SetRenderDrawColor(renderer, fColor.r, fColor.g, fColor.b, 0);
+        SDL_RenderFillRect(renderer, &rect);
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+        SDL_RenderDrawRect(renderer, &rect);
     }
 }
 
-void start_new_game(FigureList **fl, Figure **figure, int *deleteCounter, int *downCounter, int *score)
+int render(SDL_Window *window, SDL_Renderer *ren, Game *game)
 {
-    delete_figure_list(*fl);
-    delete_figure(*figure);
+    SDL_UpdateWindowSurface(window);
+    SDL_SetRenderDrawColor(ren, 160, 160, 160, 0);
+    SDL_Rect mainRect = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
+    if (SDL_RenderFillRect(ren, &mainRect) < 0)
+    {
+        printf("Can't resresh canvas: (%s)", SDL_GetError());
+        TTF_Quit();
+        SDL_Quit();
+        return ERROR_CODE;
+    }
 
-    *fl = create_figure_list();
-    *figure = create_random_figure(FIGURE_START_X_POINT, FIGURE_START_Y_POINT);
-    *deleteCounter = 0;
-    *downCounter = 0;
-    *score = 0;
+    draw_figure(game->figure, ren);
+
+    for (int i = 0; i < game->fl->size; i++)
+    {
+        if (game->fl->figures[i] == NULL)
+        {
+            break;
+        }
+        draw_figure(game->fl->figures[i], ren);
+    }
+
+    SDL_Rect outer_rect = {GAME_LEFT_BORDER, FIGURE_START_Y_POINT, ELEMENT_SIZE * 10, ELEMENT_SIZE * 20};
+    SDL_SetRenderDrawColor(ren, 0, 0, 0, 0);
+    SDL_RenderDrawRect(ren, &outer_rect);
+
+    if (game->isGameOver)
+    {
+        print_game_over(ren);
+    }
+
+    print_title(ren);
+    print_score(game->score, ren);
+    SDL_RenderPresent(ren);
+
+    return SUCCESS_CODE;
 }
 
 int main(int argc, char **args)
@@ -240,154 +249,93 @@ int main(int argc, char **args)
         return ERROR_CODE;
     }
 
-    // Figure that can be moved by player
-    Figure *figure = create_random_figure(FIGURE_START_X_POINT, FIGURE_START_Y_POINT);
-    // List of previous moved figures
-    FigureList *fl = create_figure_list();
-    int score = 0;
+    Game *game = create_new_game();
 
     SDL_Event windowEvent;
 
-    int downCounter = 0;
-    int deleteCounter = 0;
-    int gameOver = 0;
-
     while (1)
     {
-        if (!gameOver)
+        if (!is_game_over(game))
         {
-            game_update(fl, &figure, &windowEvent, &deleteCounter, &downCounter, &score);
+            update_game(game);
         }
+
         if (SDL_PollEvent(&windowEvent))
         {
-            
             if (SDL_QUIT == windowEvent.type)
             {
-                fprintf(stdout, "clickQuit");
+                printf("Clicked Quit button");
                 break;
             }
+
             if (SDL_KEYDOWN == windowEvent.type)
             {
                 switch (windowEvent.key.keysym.sym)
                 {
                 case SDLK_LEFT:
-                    if (gameOver) break;
-                    move_left(figure);
-                    if (is_figure_intersect_list(fl, figure) == 1)
+                    if (is_game_over(game))
                     {
-                        move_right(figure);
+                        break;
+                    }
+
+                    move_left(game->figure);
+                    if (is_figure_intersect_list(game->fl, game->figure) == 1)
+                    {
+                        move_right(game->figure);
                     }
                     break;
                 case SDLK_RIGHT:
-                    if (gameOver) break;
-                    move_right(figure);
-                    if (is_figure_intersect_list(fl, figure) == 1)
+                    if (is_game_over(game))
                     {
-                        move_left(figure);
+                        break;
+                    }
+
+                    move_right(game->figure);
+                    if (is_figure_intersect_list(game->fl, game->figure) == 1)
+                    {
+                        move_left(game->figure);
                     }
                     break;
                 case SDLK_DOWN:
-                    if (gameOver) break;
-                    int res = move_down_figure(figure);
+                    if (is_game_over(game))
+                    {
+                        break;
+                    }
+
+                    int res = move_down_figure(game->figure);
                     if (res == 0)
                     {
-                        fl_push(fl, figure);
-                        figure = create_random_figure(FIGURE_START_X_POINT, FIGURE_START_Y_POINT);
+                        fl_push(game->fl, game->figure);
+                        game->figure = create_random_figure(FIGURE_START_X_POINT, FIGURE_START_Y_POINT);
                     }
                     else
                     {
-                        if (is_figure_intersect_list(fl, figure) == 1)
+                        if (is_figure_intersect_list(game->fl, game->figure) == 1)
                         {
-                            move_up_figure(figure);
-                            fl_push(fl, figure);
-                            figure = create_random_figure(FIGURE_START_X_POINT, FIGURE_START_Y_POINT);
+                            move_up_figure(game->figure);
+                            fl_push(game->fl, game->figure);
+                            game->figure = create_random_figure(FIGURE_START_X_POINT, FIGURE_START_Y_POINT);
                         }
                     }
                     break;
                 case SDLK_SPACE:
-                    start_new_game(&fl, &figure, &deleteCounter, &downCounter, &score);
-                    gameOver = 0;
+                    delete_game(game);
+                    game = create_new_game();
                     continue;
                 default:
                     break;
                 }
             }
-
-            if (SDL_MOUSEBUTTONDOWN == windowEvent.type)
-            {
-                fprintf(stdout, "MOUSE BOTTON CLICKED");
-            }
-        }
-        SDL_UpdateWindowSurface(window);
-        SDL_SetRenderDrawColor(ren, 160, 160, 160, 0);
-        SDL_Rect mainRect = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
-        if (SDL_RenderFillRect(ren, &mainRect) < 0)
-        {
-            printf("Can't resresh canvas: (%s)", SDL_GetError());
-            TTF_Quit();
-            SDL_Quit();
-            return ERROR_CODE;
         }
 
-        Element *elements[4];
-        elements[0] = figure->e1;
-        elements[1] = figure->e2;
-        elements[2] = figure->e3;
-        elements[3] = figure->e4;
-        SDL_Color fColor = get_figure_color(figure);
-        for (int j = 0; j < sizeof(elements) / sizeof(elements[0]); j++)
-        {
-            SDL_Rect rect = {elements[j]->x + 1, elements[j]->y + 1, ELEMENT_SIZE - 2, ELEMENT_SIZE - 2};
-            SDL_SetRenderDrawColor(ren, fColor.r, fColor.g, fColor.b, 0);
-            SDL_RenderFillRect(ren, &rect);
-            SDL_SetRenderDrawColor(ren, 0, 0, 0, 0);
-            SDL_RenderDrawRect(ren, &rect);
-        }
+        render(window, ren, game);
 
-        for (int i = 0; i < fl->size; i++)
-        {
-            if (fl->figures[i] == NULL)
-            {
-                break;
-            }
-            Element *elements[4];
-            elements[0] = fl->figures[i]->e1;
-            elements[1] = fl->figures[i]->e2;
-            elements[2] = fl->figures[i]->e3;
-            elements[3] = fl->figures[i]->e4;
-            SDL_Color fColor = get_figure_color(fl->figures[i]);
-            for (int j = 0; j < sizeof(elements) / sizeof(elements[0]); j++)
-            {
-                if (!elements[j]) continue;
-
-                SDL_Rect rect = {elements[j]->x + 1, elements[j]->y + 1, ELEMENT_SIZE - 2, ELEMENT_SIZE - 2};
-                SDL_SetRenderDrawColor(ren, fColor.r, fColor.g, fColor.b, 0);
-                SDL_RenderFillRect(ren, &rect);
-                SDL_SetRenderDrawColor(ren, 0, 0, 0, 0);
-                SDL_RenderDrawRect(ren, &rect);
-            }
-        }
-
-        SDL_Rect outer_rect = {GAME_LEFT_BORDER, FIGURE_START_Y_POINT, ELEMENT_SIZE * 10, ELEMENT_SIZE * 20};
-        SDL_SetRenderDrawColor(ren, 0, 0, 0, 0);
-        SDL_RenderDrawRect(ren, &outer_rect);
-
-        if (is_figure_intersect_list(fl, figure))
-        {
-            gameOver = 1;
-            print_game_over(ren);
-        }
-
-        print_title(ren);
-        print_score(score, ren);
-        SDL_RenderPresent(ren);
-
-        fflush(stdout);
         SDL_Delay(10);
-        downCounter += 10;
-        deleteCounter += 10;
+        game->downCounter += 10;
+        game->deleteCounter += 10;
     }
-    delete_figure(figure);
+
+    delete_figure(game->figure);
 
     TTF_Quit();
     SDL_DestroyRenderer(ren);

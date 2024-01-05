@@ -3,6 +3,8 @@
 #define FIGURE_TEST
 
 #include <cmocka.h>
+#include <stdlib.h>
+
 #include "../src/figure.h"
 #include "../src/configuration.h"
 
@@ -265,9 +267,9 @@ static void test_figure_intersect_other_figure(void **state) {
     Figure *figure = create_o_figure(200, 200);
     Figure *figure1 = create_o_figure(225, 200);
 
-    int result = is_figures_intersected(figure, figure1);
+    const int result = is_figures_intersected(figure, figure1);
 
-    assert_int_equal(1,1);
+    assert_int_equal(1,result);
 }
 
 static void test_figure_move_up(void **state) {
