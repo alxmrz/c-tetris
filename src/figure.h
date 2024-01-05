@@ -41,4 +41,6 @@ int move_up_figure(Figure *);
 
 int is_figures_intersected(Figure *, Figure *);
 
+void move_figure_to_point(Figure *figure, int x, int y);
+
 #endif

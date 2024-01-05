@@ -68,12 +68,16 @@ void handle_down_arrow_key_pressed(Game *game) {
     int res = move_down_figure(game->figure);
     if (res == 0) {
         fl_push(game->fl, game->figure);
-        game->figure = create_random_figure(FIGURE_START_X_POINT, FIGURE_START_Y_POINT);
+        game->figure = game->nextFigure;
+        move_figure_to_point(game->figure, FIGURE_START_X_POINT, FIGURE_START_Y_POINT);
+        game->nextFigure = create_random_figure(NEXT_FIGURE_START_X_POINT, NEXT_FIGURE_START_Y_POINT);
     } else {
         if (is_figure_intersect_list(game->fl, game->figure) == 1) {
             move_up_figure(game->figure);
             fl_push(game->fl, game->figure);
-            game->figure = create_random_figure(FIGURE_START_X_POINT, FIGURE_START_Y_POINT);
+            game->figure = game->nextFigure;
+            move_figure_to_point(game->figure, FIGURE_START_X_POINT, FIGURE_START_Y_POINT);
+            game->nextFigure = create_random_figure(NEXT_FIGURE_START_X_POINT, NEXT_FIGURE_START_Y_POINT);
         }
     }
 }

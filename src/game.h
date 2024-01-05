@@ -7,6 +7,7 @@
 typedef struct Game {
     FigureList *fl;
     Figure *figure;
+    Figure *nextFigure;
     int score;
     int downCounter;
     int deleteCounter;

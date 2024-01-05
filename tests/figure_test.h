@@ -296,4 +296,27 @@ static void test_not_full_figure_move_up(void **state) {
     free(figure);
 }
 
+
+static void test_move_to_point(void **state) {
+    Figure *figure = create_o_figure(0, 0);
+
+    move_figure_to_point(figure, 100, 200);
+
+
+    assert_int_equal(figure->e1->x, 100);
+    assert_int_equal(figure->e1->y, 200);
+
+    assert_int_equal(figure->e2->x, 100+ELEMENT_SIZE);
+    assert_int_equal(figure->e2->y, 200);
+
+    assert_int_equal(figure->e3->x, 100);
+    assert_int_equal(figure->e3->y, 200+ELEMENT_SIZE);
+
+    assert_int_equal(figure->e4->x, 100+ELEMENT_SIZE);
+    assert_int_equal(figure->e4->y, 200+ELEMENT_SIZE);
+
+
+    delete_figure(figure);
+}
+
 #endif

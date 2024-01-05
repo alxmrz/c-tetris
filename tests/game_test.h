@@ -9,6 +9,7 @@ static void test_create_new_game(void **state) {
 
     assert_non_null(game->fl);
     assert_non_null(game->figure);
+    assert_non_null(game->nextFigure);
     assert_int_equal(0, game->score);
     assert_int_equal(0, game->isGameOver);
     assert_int_equal(0, game->downCounter);

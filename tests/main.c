@@ -29,6 +29,7 @@ int main(void)
         cmocka_unit_test(test_figure_intersect_other_figure),
         cmocka_unit_test(test_figure_move_up),
         cmocka_unit_test(test_not_full_figure_move_up),
+        cmocka_unit_test(test_move_to_point),
     };
 
     const struct CMUnitTest element_tests[] = {

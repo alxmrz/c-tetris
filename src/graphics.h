@@ -22,6 +22,8 @@ int print_text(char *text, SDL_Rect *dst, SDL_Renderer *renderer, SDL_Color *col
 
 int print_score(int score, SDL_Renderer *renderer);
 
+int print_next_figure_text(SDL_Renderer *renderer);
+
 int print_title(SDL_Renderer *renderer);
 
 int print_game_over(SDL_Renderer *renderer);

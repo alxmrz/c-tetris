@@ -129,6 +129,14 @@ int print_score(int score, SDL_Renderer *renderer) {
     return print_text(buf, &messageRect, renderer, &color);
 }
 
+int print_next_figure_text(SDL_Renderer *renderer) {
+    SDL_Color color = {0, 0, 0xFF, 0};
+
+    SDL_Rect messageRect = {360, 350, 100, 75};
+
+    return print_text("Next:", &messageRect, renderer, &color);
+}
+
 int print_title(SDL_Renderer *renderer) {
     SDL_Rect messageRect = {125, 0, 200, 100};
     SDL_Color color = {0, 0, 0xFF, 0};
@@ -232,6 +240,7 @@ int render_view(View *view, Game *game) {
     }
 
     draw_figure(game->figure, view->renderer);
+    draw_figure(game->nextFigure, view->renderer);
 
     for (int i = 0; i < game->fl->size; i++) {
         if (game->fl->figures[i] == NULL) {
@@ -244,12 +253,14 @@ int render_view(View *view, Game *game) {
     SDL_SetRenderDrawColor(view->renderer, 0, 0, 0, 0);
     SDL_RenderDrawRect(view->renderer, &outer_rect);
 
+    print_next_figure_text(view->renderer);
+    print_title(view->renderer);
+    print_score(game->score, view->renderer);
+
     if (game->isGameOver) {
         print_game_over(view->renderer);
     }
 
-    print_title(view->renderer);
-    print_score(game->score, view->renderer);
     SDL_RenderPresent(view->renderer);
 
     return SUCCESS_CODE;

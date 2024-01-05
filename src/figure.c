@@ -250,3 +250,102 @@ int is_figures_intersected(Figure *f1, Figure *f2) {
 
     return 0;
 }
+
+void move_figure_to_point(Figure *figure, int x, int y) {
+    switch (figure->type) {
+        case 'O':
+            figure->e1->x = x;
+            figure->e1->y = y;
+
+            figure->e2->x = x + ELEMENT_SIZE;
+            figure->e2->y = y;
+
+            figure->e3->x = x;
+            figure->e3->y = y + ELEMENT_SIZE;
+
+            figure->e4->x = x + ELEMENT_SIZE;
+            figure->e4->y = y + ELEMENT_SIZE;
+            break;
+        case 'I':
+            figure->e1->x = x;
+            figure->e1->y = y;
+
+            figure->e2->x = x;
+            figure->e2->y = y + ELEMENT_SIZE;
+
+            figure->e3->x = x;
+            figure->e3->y = y + ELEMENT_SIZE * 2;
+
+            figure->e4->x = x;
+            figure->e4->y = y + ELEMENT_SIZE * 3;
+            break;
+        case 'J':
+            figure->e1->x = x;
+            figure->e1->y = y;
+
+            figure->e2->x = x;
+            figure->e2->y = y + ELEMENT_SIZE;
+
+            figure->e3->x = x;
+            figure->e3->y = y + ELEMENT_SIZE * 2;
+
+            figure->e4->x = x - ELEMENT_SIZE;
+            figure->e4->y = y + ELEMENT_SIZE * 2;
+            break;
+        case 'L':
+            figure->e1->x = x;
+            figure->e1->y = y;
+
+            figure->e2->x = x;
+            figure->e2->y = y + ELEMENT_SIZE;
+
+            figure->e3->x = x;
+            figure->e3->y = y + ELEMENT_SIZE * 2;
+
+            figure->e4->x = x + ELEMENT_SIZE;
+            figure->e4->y = y + ELEMENT_SIZE * 2;
+            break;
+        case 'S':
+            figure->e1->x = x;
+            figure->e1->y = y + ELEMENT_SIZE;
+
+            figure->e2->x = x + ELEMENT_SIZE;
+            figure->e2->y = y;
+
+            figure->e3->x = x + ELEMENT_SIZE;
+            figure->e3->y = y + ELEMENT_SIZE;
+
+            figure->e4->x = x + ELEMENT_SIZE * 2;
+            figure->e4->y = y;
+            break;
+        case 'T':
+            figure->e1->x = x;
+            figure->e1->y = y;
+
+            figure->e2->x = x + ELEMENT_SIZE;
+            figure->e2->y = y;
+
+            figure->e3->x = x + ELEMENT_SIZE;
+            figure->e3->y = y + ELEMENT_SIZE;
+
+            figure->e4->x = x + ELEMENT_SIZE * 2;
+            figure->e4->y = y;
+            break;
+        case 'Z':
+            figure->e1->x = x;
+            figure->e1->y = y;
+
+            figure->e2->x = x + ELEMENT_SIZE;
+            figure->e2->y = y;
+
+            figure->e3->x = x + ELEMENT_SIZE;
+            figure->e3->y = y + ELEMENT_SIZE;
+
+            figure->e4->x = x + ELEMENT_SIZE * 2;
+            figure->e4->y = y + ELEMENT_SIZE;
+            break;
+
+        default:
+            break;
+    }
+}
