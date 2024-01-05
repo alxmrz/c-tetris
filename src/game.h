@@ -16,10 +16,17 @@ typedef struct Game {
 } Game;
 
 Game *create_new_game();
+
 void delete_game(Game *);
 
 void update_game(Game *);
+
 int is_game_over(Game *);
+
 void stop_game(Game *);
+
+void delay_game(Game *);
+
+void increment_game_counters(Game *);
 
 #endif

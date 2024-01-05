@@ -1,16 +1,16 @@
 #include "figure.h"
 #include "figure_list.h"
 
-FigureList * create_figure_list() {
+FigureList *create_figure_list() {
     FigureList *fl = malloc(sizeof(FigureList));
-    fl->figures = malloc(sizeof(Figure*) * DEFAULT_FL_SIZE);
+    fl->figures = malloc(sizeof(Figure *) * DEFAULT_FL_SIZE);
     fl->size = 0;
     fl->maxSize = DEFAULT_FL_SIZE;
 
     return fl;
 }
 
-void delete_figure_list(FigureList * fl) {
+void delete_figure_list(FigureList *fl) {
     for (int i = 0; i < fl->size; i++) {
         delete_figure(fl->figures[i]);
     }
@@ -29,7 +29,7 @@ int fl_push(FigureList *fl, Figure *figure) {
     return 1;
 }
 
-int is_figure_intersect_list(FigureList * fl, Figure *figure) {
+int is_figure_intersect_list(FigureList *fl, Figure *figure) {
     for (int i = 0; i < fl->size; i++) {
         if (figure == fl->figures[i]) {
             continue;
@@ -77,11 +77,11 @@ int delete_one_line_elements(FigureList *fl) {
                     for (int fi = 0; fi < fl->size; fi++) {
                         if (fl->figures[fi]->e1 == elements[j]) {
                             fl->figures[fi]->e1 = NULL;
-                        } else if(fl->figures[fi]->e2 == elements[j]) {
+                        } else if (fl->figures[fi]->e2 == elements[j]) {
                             fl->figures[fi]->e2 = NULL;
-                        } else if(fl->figures[fi]->e3 == elements[j]) {
+                        } else if (fl->figures[fi]->e3 == elements[j]) {
                             fl->figures[fi]->e3 = NULL;
-                        } else if(fl->figures[fi]->e4 == elements[j]) {
+                        } else if (fl->figures[fi]->e4 == elements[j]) {
                             fl->figures[fi]->e4 = NULL;
                         }
                     }

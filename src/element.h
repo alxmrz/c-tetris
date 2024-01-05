@@ -8,9 +8,10 @@ typedef struct Element {
     int y;
 } Element;
 
-Element * create_element(int x, int y);
-void delete_element(Element * element);
+Element *create_element(int x, int y);
 
-void move_down (Element *element);
+void delete_element(Element *element);
+
+void move_down(Element *element);
 
 #endif

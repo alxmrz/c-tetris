@@ -4,17 +4,76 @@
 #include "figure.h"
 #include "figure_list.h"
 #include "game.h"
+#include "graphics.h"
 
-int init_graphics()
-{
-    if (SDL_Init(SDL_INIT_EVERYTHING) != SUCCESS_CODE)
-    {
+View *create_view() {
+    if (!init_graphics()) {
+        return NULL;
+    }
+
+    View *view = malloc(sizeof(View));
+    if (view == NULL) {
+        printf("Can't malloc View\n");
+        TTF_Quit();
+        SDL_Quit();
+
+        return NULL;
+    }
+
+    SDL_Window *window = SDL_CreateWindow(
+        "Tetris with SDL2!",
+        SDL_WINDOWPOS_UNDEFINED,
+        SDL_WINDOWPOS_UNDEFINED,
+        WINDOW_WIDTH,
+        WINDOW_HEIGHT,
+        SDL_WINDOW_SHOWN);
+
+    if (window == NULL) {
+        printf("Can't create window: %s\n", SDL_GetError());
+        delete_view(view);
+
+        return NULL;
+    }
+
+    view->is_ttf_inited = 1;
+
+    SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    if (renderer == NULL) {
+        printf("Can't create renderer: %s\n", SDL_GetError());
+        delete_view(view);
+
+        return NULL;
+    }
+
+    view->is_sdl_inited = 1;
+
+    view->renderer = renderer;
+    view->window = window;
+
+    return view;
+}
+
+void delete_view(View *view) {
+    if (view->is_ttf_inited) {
+        TTF_Quit();
+    }
+
+    if (view->is_sdl_inited) {
+        SDL_DestroyRenderer(view->renderer);
+        SDL_Quit();
+        SDL_DestroyWindow(view->window);
+    }
+
+    free(view);
+}
+
+int init_graphics() {
+    if (SDL_Init(SDL_INIT_EVERYTHING) != SUCCESS_CODE) {
         printf("Cant intitialize SDL: %s\n", SDL_GetError());
         return 0;
     }
 
-    if (TTF_Init() != SUCCESS_CODE)
-    {
+    if (TTF_Init() != SUCCESS_CODE) {
         printf("Cant intitialize TTF: %s\n", TTF_GetError());
         SDL_Quit();
         return 0;
@@ -23,11 +82,9 @@ int init_graphics()
     return 1;
 }
 
-int print_text(char *text, SDL_Rect *dst, SDL_Renderer *renderer, SDL_Color *color)
-{
+int print_text(char *text, SDL_Rect *dst, SDL_Renderer *renderer, SDL_Color *color) {
     TTF_Font *Sans = TTF_OpenFont("./resources/Sans.ttf", 24);
-    if (Sans == NULL)
-    {
+    if (Sans == NULL) {
         printf("Can't create font: %s\n", TTF_GetError());
         TTF_Quit();
         SDL_Quit();
@@ -35,8 +92,7 @@ int print_text(char *text, SDL_Rect *dst, SDL_Renderer *renderer, SDL_Color *col
     }
 
     SDL_Surface *surfaceMessage = TTF_RenderText_Solid(Sans, text, *color);
-    if (surfaceMessage == NULL)
-    {
+    if (surfaceMessage == NULL) {
         printf("Can't create title surface: %s\n", TTF_GetError());
         TTF_CloseFont(Sans);
         TTF_Quit();
@@ -45,8 +101,7 @@ int print_text(char *text, SDL_Rect *dst, SDL_Renderer *renderer, SDL_Color *col
     }
 
     SDL_Texture *message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
-    if (message == NULL)
-    {
+    if (message == NULL) {
         printf("Can't create title message texture: %s\n", SDL_GetError());
         SDL_FreeSurface(surfaceMessage);
         TTF_CloseFont(Sans);
@@ -64,8 +119,7 @@ int print_text(char *text, SDL_Rect *dst, SDL_Renderer *renderer, SDL_Color *col
     return SUCCESS_CODE;
 }
 
-int print_score(int score, SDL_Renderer *renderer)
-{
+int print_score(int score, SDL_Renderer *renderer) {
     char buf[20];
     snprintf(buf, 20, "Score: %d", score);
     SDL_Color color = {0, 0, 0xFF, 0};
@@ -75,16 +129,14 @@ int print_score(int score, SDL_Renderer *renderer)
     return print_text(buf, &messageRect, renderer, &color);
 }
 
-int print_title(SDL_Renderer *renderer)
-{
+int print_title(SDL_Renderer *renderer) {
     SDL_Rect messageRect = {125, 0, 200, 100};
     SDL_Color color = {0, 0, 0xFF, 0};
 
     return print_text("Tetris", &messageRect, renderer, &color);
 }
 
-int print_game_over(SDL_Renderer *renderer)
-{
+int print_game_over(SDL_Renderer *renderer) {
     SDL_Rect messageRect = {35, 260, 400, 100};
     SDL_Rect helperMessageRect = {100, 350, 300, 70};
     SDL_Color color = {0xFF, 0, 0, 0};
@@ -99,69 +151,64 @@ int print_game_over(SDL_Renderer *renderer)
     return 1;
 }
 
-SDL_Color get_figure_color(Figure *figure)
-{
+SDL_Color get_figure_color(Figure *figure) {
     SDL_Color color;
-    switch (figure->type)
-    {
-    case 'O':
-        color.r = 0xFF;
-        color.g = 0x00;
-        color.b = 0x00;
-        break;
-    case 'I':
-        color.r = 0x00;
-        color.g = 0xFF;
-        color.b = 0x00;
-        break;
-    case 'J':
-        color.r = 0x00;
-        color.g = 0x00;
-        color.b = 0xFF;
-        break;
-    case 'L':
-        color.r = 0xFF;
-        color.g = 0x00;
-        color.b = 0xFF;
-        break;
-    case 'S':
-        color.r = 0x00;
-        color.g = 0xFF;
-        color.b = 0xFF;
-        break;
-    case 'T':
-        color.r = 0xFF;
-        color.g = 0xFF;
-        color.b = 0xFF;
-        break;
-    case 'Z':
-        color.r = 0xFF;
-        color.g = 0x0F;
-        color.b = 0xF0;
-        break;
+    switch (figure->type) {
+        case 'O':
+            color.r = 0xFF;
+            color.g = 0x00;
+            color.b = 0x00;
+            break;
+        case 'I':
+            color.r = 0x00;
+            color.g = 0xFF;
+            color.b = 0x00;
+            break;
+        case 'J':
+            color.r = 0x00;
+            color.g = 0x00;
+            color.b = 0xFF;
+            break;
+        case 'L':
+            color.r = 0xFF;
+            color.g = 0x00;
+            color.b = 0xFF;
+            break;
+        case 'S':
+            color.r = 0x00;
+            color.g = 0xFF;
+            color.b = 0xFF;
+            break;
+        case 'T':
+            color.r = 0xFF;
+            color.g = 0xFF;
+            color.b = 0xFF;
+            break;
+        case 'Z':
+            color.r = 0xFF;
+            color.g = 0x0F;
+            color.b = 0xF0;
+            break;
 
-    default:
-        color.r = 0xFF;
-        color.g = 0x00;
-        color.b = 0x00;
-        break;
+        default:
+            color.r = 0xFF;
+            color.g = 0x00;
+            color.b = 0x00;
+            break;
     }
 
     return color;
 }
 
-void draw_figure(Figure *figure, SDL_Renderer *renderer)
-{
+void draw_figure(Figure *figure, SDL_Renderer *renderer) {
     Element *elements[4];
     elements[0] = figure->e1;
     elements[1] = figure->e2;
     elements[2] = figure->e3;
     elements[3] = figure->e4;
     SDL_Color fColor = get_figure_color(figure);
-    for (int j = 0; j < sizeof(elements) / sizeof(elements[0]); j++)
-    {
-        if (!elements[j])
-        {
+    for (int j = 0; j < sizeof(elements) / sizeof(elements[0]); j++) {
+        if (!elements[j]) {
             continue;
         }
 
@@ -173,42 +220,37 @@ void draw_figure(Figure *figure, SDL_Renderer *renderer)
     }
 }
 
-int render(SDL_Window *window, SDL_Renderer *ren, Game *game)
-{
-    SDL_UpdateWindowSurface(window);
-    SDL_SetRenderDrawColor(ren, 160, 160, 160, 0);
+int render_view(View *view, Game *game) {
+    SDL_UpdateWindowSurface(view->window);
+    SDL_SetRenderDrawColor(view->renderer, 160, 160, 160, 0);
     SDL_Rect mainRect = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
-    if (SDL_RenderFillRect(ren, &mainRect) < 0)
-    {
+    if (SDL_RenderFillRect(view->renderer, &mainRect) < 0) {
         printf("Can't resresh canvas: (%s)", SDL_GetError());
         TTF_Quit();
         SDL_Quit();
         return ERROR_CODE;
     }
 
-    draw_figure(game->figure, ren);
+    draw_figure(game->figure, view->renderer);
 
-    for (int i = 0; i < game->fl->size; i++)
-    {
-        if (game->fl->figures[i] == NULL)
-        {
+    for (int i = 0; i < game->fl->size; i++) {
+        if (game->fl->figures[i] == NULL) {
             break;
         }
-        draw_figure(game->fl->figures[i], ren);
+        draw_figure(game->fl->figures[i], view->renderer);
     }
 
     SDL_Rect outer_rect = {GAME_LEFT_BORDER, FIGURE_START_Y_POINT, ELEMENT_SIZE * 10, ELEMENT_SIZE * 20};
-    SDL_SetRenderDrawColor(ren, 0, 0, 0, 0);
-    SDL_RenderDrawRect(ren, &outer_rect);
+    SDL_SetRenderDrawColor(view->renderer, 0, 0, 0, 0);
+    SDL_RenderDrawRect(view->renderer, &outer_rect);
 
-    if (game->isGameOver)
-    {
-        print_game_over(ren);
+    if (game->isGameOver) {
+        print_game_over(view->renderer);
     }
 
-    print_title(ren);
-    print_score(game->score, ren);
-    SDL_RenderPresent(ren);
+    print_title(view->renderer);
+    print_score(game->score, view->renderer);
+    SDL_RenderPresent(view->renderer);
 
     return SUCCESS_CODE;
 }

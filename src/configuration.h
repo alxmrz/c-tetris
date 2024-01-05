@@ -3,8 +3,8 @@
 
 #include "element.h"
 
-#define SUCCESS_CODE 0
-#define ERROR_CODE 1
+#define SUCCESS_CODE         0
+#define ERROR_CODE           1
 #define WINDOW_WIDTH         480
 #define WINDOW_HEIGHT        640
 #define FIGURE_START_Y_POINT 100

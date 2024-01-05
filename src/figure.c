@@ -1,4 +1,3 @@
-
 #include "figure.h"
 #include "malloc.h"
 #include "stdlib.h"
@@ -7,11 +6,10 @@
 
 static const int figure_types_count = 7;
 
-Figure * create_random_figure(int x, int y) {
+Figure *create_random_figure(int x, int y) {
     int randNumber = rand() % figure_types_count;
 
-    switch (randNumber)
-    {
+    switch (randNumber) {
         case 0:
             return create_o_figure(x, y);
         case 1:
@@ -32,86 +30,86 @@ Figure * create_random_figure(int x, int y) {
     }
 }
 
-Figure * create_o_figure(int x, int y) {
-    Figure * figure = malloc(sizeof(Figure));
+Figure *create_o_figure(int x, int y) {
+    Figure *figure = malloc(sizeof(Figure));
 
     figure->type = 'O';
-    figure->e1 = create_element(x,y);
-    figure->e2 = create_element(x+ELEMENT_SIZE,y);
-    figure->e3 = create_element(x,y+ELEMENT_SIZE);
-    figure->e4 = create_element(x+ELEMENT_SIZE,y+ELEMENT_SIZE);
+    figure->e1 = create_element(x, y);
+    figure->e2 = create_element(x + ELEMENT_SIZE, y);
+    figure->e3 = create_element(x, y + ELEMENT_SIZE);
+    figure->e4 = create_element(x + ELEMENT_SIZE, y + ELEMENT_SIZE);
 
     return figure;
 }
 
-Figure * create_L_figure(int x, int y) {
-    Figure * figure = malloc(sizeof(Figure));
+Figure *create_L_figure(int x, int y) {
+    Figure *figure = malloc(sizeof(Figure));
 
     figure->type = 'L';
-    figure->e1 = create_element(x,y);
-    figure->e2 = create_element(x,y+ELEMENT_SIZE);
-    figure->e3 = create_element(x,y+ELEMENT_SIZE*2);
-    figure->e4 = create_element(x+ELEMENT_SIZE,y+ELEMENT_SIZE*2);
+    figure->e1 = create_element(x, y);
+    figure->e2 = create_element(x, y + ELEMENT_SIZE);
+    figure->e3 = create_element(x, y + ELEMENT_SIZE * 2);
+    figure->e4 = create_element(x + ELEMENT_SIZE, y + ELEMENT_SIZE * 2);
 
     return figure;
 }
 
-Figure * create_J_figure(int x, int y) {
-    Figure * figure = malloc(sizeof(Figure));
+Figure *create_J_figure(int x, int y) {
+    Figure *figure = malloc(sizeof(Figure));
 
     figure->type = 'J';
-    figure->e1 = create_element(x,y);
-    figure->e2 = create_element(x,y+ELEMENT_SIZE);
-    figure->e3 = create_element(x,y+ELEMENT_SIZE*2);
-    figure->e4 = create_element(x-ELEMENT_SIZE,y+ELEMENT_SIZE*2);
+    figure->e1 = create_element(x, y);
+    figure->e2 = create_element(x, y + ELEMENT_SIZE);
+    figure->e3 = create_element(x, y + ELEMENT_SIZE * 2);
+    figure->e4 = create_element(x - ELEMENT_SIZE, y + ELEMENT_SIZE * 2);
 
     return figure;
 }
 
-Figure * create_I_figure(int x, int y) {
-    Figure * figure = malloc(sizeof(Figure));
+Figure *create_I_figure(int x, int y) {
+    Figure *figure = malloc(sizeof(Figure));
 
     figure->type = 'I';
-    figure->e1 = create_element(x,y);
-    figure->e2 = create_element(x,y+ELEMENT_SIZE);
-    figure->e3 = create_element(x,y+ELEMENT_SIZE*2);
-    figure->e4 = create_element(x,y+ELEMENT_SIZE*3);
+    figure->e1 = create_element(x, y);
+    figure->e2 = create_element(x, y + ELEMENT_SIZE);
+    figure->e3 = create_element(x, y + ELEMENT_SIZE * 2);
+    figure->e4 = create_element(x, y + ELEMENT_SIZE * 3);
 
     return figure;
 }
 
-Figure * create_S_figure(int x, int y) {
-    Figure * figure = malloc(sizeof(Figure));
+Figure *create_S_figure(int x, int y) {
+    Figure *figure = malloc(sizeof(Figure));
 
     figure->type = 'S';
-    figure->e1 = create_element(x,y+ELEMENT_SIZE);
-    figure->e2 = create_element(x+ELEMENT_SIZE,y);
-    figure->e3 = create_element(x+ELEMENT_SIZE,y+ELEMENT_SIZE);
-    figure->e4 = create_element(x+ELEMENT_SIZE*2,y);
+    figure->e1 = create_element(x, y + ELEMENT_SIZE);
+    figure->e2 = create_element(x + ELEMENT_SIZE, y);
+    figure->e3 = create_element(x + ELEMENT_SIZE, y + ELEMENT_SIZE);
+    figure->e4 = create_element(x + ELEMENT_SIZE * 2, y);
 
     return figure;
 }
 
-Figure * create_T_figure(int x, int y) {
-    Figure * figure = malloc(sizeof(Figure));
+Figure *create_T_figure(int x, int y) {
+    Figure *figure = malloc(sizeof(Figure));
 
     figure->type = 'T';
-    figure->e1 = create_element(x,y);
-    figure->e2 = create_element(x+ELEMENT_SIZE,y);
-    figure->e3 = create_element(x+ELEMENT_SIZE,y+ELEMENT_SIZE);
-    figure->e4 = create_element(x+ELEMENT_SIZE*2,y);
+    figure->e1 = create_element(x, y);
+    figure->e2 = create_element(x + ELEMENT_SIZE, y);
+    figure->e3 = create_element(x + ELEMENT_SIZE, y + ELEMENT_SIZE);
+    figure->e4 = create_element(x + ELEMENT_SIZE * 2, y);
 
     return figure;
 }
 
-Figure * create_Z_figure(int x, int y) {
-    Figure * figure = malloc(sizeof(Figure));
+Figure *create_Z_figure(int x, int y) {
+    Figure *figure = malloc(sizeof(Figure));
 
     figure->type = 'Z';
-    figure->e1 = create_element(x,y);
-    figure->e2 = create_element(x+ELEMENT_SIZE,y);
-    figure->e3 = create_element(x+ELEMENT_SIZE,y+ELEMENT_SIZE);
-    figure->e4 = create_element(x+ELEMENT_SIZE*2,y+ELEMENT_SIZE);
+    figure->e1 = create_element(x, y);
+    figure->e2 = create_element(x + ELEMENT_SIZE, y);
+    figure->e3 = create_element(x + ELEMENT_SIZE, y + ELEMENT_SIZE);
+    figure->e4 = create_element(x + ELEMENT_SIZE * 2, y + ELEMENT_SIZE);
 
     return figure;
 }
@@ -142,22 +140,22 @@ int move_left(Figure *figure) {
         figure->e3->x == GAME_LEFT_BORDER ||
         figure->e4->x == GAME_LEFT_BORDER
     ) {
-    return 0;
+        return 0;
     }
 
-   figure->e1->x -= ELEMENT_SIZE;
-   figure->e2->x -= ELEMENT_SIZE;
-   figure->e3->x -= ELEMENT_SIZE;
-   figure->e4->x -= ELEMENT_SIZE;
+    figure->e1->x -= ELEMENT_SIZE;
+    figure->e2->x -= ELEMENT_SIZE;
+    figure->e3->x -= ELEMENT_SIZE;
+    figure->e4->x -= ELEMENT_SIZE;
 
-   return 1;
+    return 1;
 }
 
 int move_right(Figure *figure) {
-    if (figure->e1->x == GAME_RIGHT_BORDER-ELEMENT_SIZE ||
-        figure->e2->x == GAME_RIGHT_BORDER-ELEMENT_SIZE ||
-        figure->e3->x == GAME_RIGHT_BORDER-ELEMENT_SIZE ||
-        figure->e4->x == GAME_RIGHT_BORDER-ELEMENT_SIZE
+    if (figure->e1->x == GAME_RIGHT_BORDER - ELEMENT_SIZE ||
+        figure->e2->x == GAME_RIGHT_BORDER - ELEMENT_SIZE ||
+        figure->e3->x == GAME_RIGHT_BORDER - ELEMENT_SIZE ||
+        figure->e4->x == GAME_RIGHT_BORDER - ELEMENT_SIZE
     ) {
         return 0;
     }
@@ -171,26 +169,26 @@ int move_right(Figure *figure) {
 }
 
 int move_down_figure(Figure *figure) {
-    if (figure->e1 && figure->e1->y+ELEMENT_SIZE == GAME_BOTTOM_BORDER) {
+    if (figure->e1 && figure->e1->y + ELEMENT_SIZE == GAME_BOTTOM_BORDER) {
         return 0;
     }
 
-    if (figure->e2 && figure->e2->y+ELEMENT_SIZE == GAME_BOTTOM_BORDER) {
-         return 0;
+    if (figure->e2 && figure->e2->y + ELEMENT_SIZE == GAME_BOTTOM_BORDER) {
+        return 0;
     }
 
-    if (figure->e3 && figure->e3->y+ELEMENT_SIZE == GAME_BOTTOM_BORDER) {
-         return 0;
+    if (figure->e3 && figure->e3->y + ELEMENT_SIZE == GAME_BOTTOM_BORDER) {
+        return 0;
     }
 
-    if (figure->e4 && figure->e4->y+ELEMENT_SIZE == GAME_BOTTOM_BORDER) {
-         return 0;
+    if (figure->e4 && figure->e4->y + ELEMENT_SIZE == GAME_BOTTOM_BORDER) {
+        return 0;
     }
 
     if (figure->e1) {
         figure->e1->y += ELEMENT_SIZE;
     }
-    
+
     if (figure->e2) {
         figure->e2->y += ELEMENT_SIZE;
     }
