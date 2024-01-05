@@ -11,6 +11,8 @@ typedef struct Game {
     int downCounter;
     int deleteCounter;
     int isGameOver;
+    int is_running;
+    int is_restart_needed;
 } Game;
 
 Game *create_new_game();
@@ -18,5 +20,6 @@ void delete_game(Game *);
 
 void update_game(Game *);
 int is_game_over(Game *);
+void stop_game(Game *);
 
 #endif

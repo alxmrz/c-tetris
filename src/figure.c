@@ -117,6 +117,21 @@ Figure * create_Z_figure(int x, int y) {
 }
 
 void delete_figure(Figure *figure) {
+    if (figure->e1) {
+        delete_element(figure->e1);
+    }
+
+    if (figure->e2) {
+        delete_element(figure->e2);
+    }
+
+    if (figure->e3) {
+        delete_element(figure->e3);
+    }
+
+    if (figure->e4) {
+        delete_element(figure->e4);
+    }
     free(figure);
 }
 

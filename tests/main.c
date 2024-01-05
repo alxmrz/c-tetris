@@ -48,6 +48,7 @@ int main(void)
     const struct CMUnitTest game_tests[] = {
         cmocka_unit_test(test_create_new_game),
         cmocka_unit_test(test_delete_game),
+        cmocka_unit_test(test_stop_game),
     };
 
     int ft = cmocka_run_group_tests(figure_tests, NULL, NULL);

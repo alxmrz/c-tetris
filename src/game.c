@@ -11,6 +11,8 @@ Game *create_new_game() {
     game->score = 0;
     game->deleteCounter = 0;
     game->downCounter = 0;
+    game->is_running = 1;
+    game->is_restart_needed = 0;
 
     return game;
 }
@@ -29,6 +31,11 @@ void delete_game(Game *game) {
 
 void update_game(Game *game)
 {
+    if (is_game_over(game))
+    {
+        return;
+    }
+
     if (game->deleteCounter > 500)
     {
         game->score += delete_one_line_elements(game->fl) * 100;
@@ -73,4 +80,8 @@ void update_game(Game *game)
 
 int is_game_over(Game *game) {
     return game->isGameOver;
+}
+
+void stop_game(Game *game) {
+    game->is_running = 0;
 }
