@@ -193,9 +193,9 @@ SDL_Color get_figure_color(Figure *figure) {
             color.b = 0xFF;
             break;
         case 'Z':
-            color.r = 0xFF;
-            color.g = 0x0F;
-            color.b = 0xF0;
+            color.r = 0x30;
+            color.g = 0x45;
+            color.b = 0x55;
             break;
 
         default:
