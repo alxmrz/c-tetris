@@ -107,6 +107,7 @@ FLHT *fl_create_hashtable() {
     ht->size = 20;
 
     for (int i = 0; i < ht->size; i++) {
+        ht->buckets[i].key = i;
         ht->buckets[i].nextValue = NULL;
     }
 
