@@ -9,8 +9,7 @@
 #include "figure_list.h"
 #include "game_test.h"
 
-int main(void)
-{
+int main(void) {
     const struct CMUnitTest figure_tests[] = {
         cmocka_unit_test(test_create_figure_O),
         cmocka_unit_test(test_create_figure_L),

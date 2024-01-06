@@ -54,19 +54,19 @@ int delete_one_line_elements(FigureList *fl) {
     // count one-line elements
     for (int i = 0; i < fl->size; i++) {
         if (fl->figures[i]->e1) {
-            fl_ht_set(ht, fl->figures[i]->e1->y, fl_ht_get(ht, fl->figures[i]->e1->y)+1);
+            fl_ht_set(ht, fl->figures[i]->e1->y, fl_ht_get(ht, fl->figures[i]->e1->y) + 1);
         }
 
         if (fl->figures[i]->e2) {
-            fl_ht_set(ht, fl->figures[i]->e2->y, fl_ht_get(ht, fl->figures[i]->e2->y)+1);
+            fl_ht_set(ht, fl->figures[i]->e2->y, fl_ht_get(ht, fl->figures[i]->e2->y) + 1);
         }
 
         if (fl->figures[i]->e3) {
-            fl_ht_set(ht, fl->figures[i]->e3->y, fl_ht_get(ht, fl->figures[i]->e3->y)+1);
+            fl_ht_set(ht, fl->figures[i]->e3->y, fl_ht_get(ht, fl->figures[i]->e3->y) + 1);
         }
 
         if (fl->figures[i]->e4) {
-            fl_ht_set(ht, fl->figures[i]->e4->y, fl_ht_get(ht, fl->figures[i]->e4->y)+1);
+            fl_ht_set(ht, fl->figures[i]->e4->y, fl_ht_get(ht, fl->figures[i]->e4->y) + 1);
         }
     }
 
@@ -99,7 +99,7 @@ int delete_one_line_elements(FigureList *fl) {
 
     fl_delete_hashtable(ht);
 
-    return deletedElements/elementsInLine;
+    return deletedElements / elementsInLine;
 }
 
 FLHT *fl_create_hashtable() {
@@ -118,7 +118,7 @@ void fl_delete_hashtable(FLHT *ht) {
     for (int i = 0; i < ht->size; i++) {
         Bucket *bucket = ht->buckets[i].nextValue;
 
-        while(bucket != NULL) {
+        while (bucket != NULL) {
             Bucket *nextBucket = bucket->nextValue;
             free(bucket);
             bucket = nextBucket;

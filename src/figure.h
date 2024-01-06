@@ -14,7 +14,9 @@ typedef struct Figure {
 } Figure;
 
 Figure *create_random_figure(int, int);
+
 Figure *create_figure_by_type(char type, int x, int y);
+
 Figure *create_o_figure(int, int);
 
 Figure *create_L_figure(int, int);
