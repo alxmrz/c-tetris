@@ -44,6 +44,7 @@ int main(void)
         cmocka_unit_test(test_fl_figure_not_intersect_itself),
         cmocka_unit_test(test_fl_delete_one_line_elements),
         cmocka_unit_test(test_fl_push),
+        cmocka_unit_test(test_fl_hashtable),
     };
 
     const struct CMUnitTest game_tests[] = {

@@ -96,10 +96,53 @@ static void test_fl_delete_one_line_elements(void **state) {
     int actual = delete_one_line_elements(fl);
     assert_int_equal(2, actual);
     assert_null(fl->figures[0]->e1);
+    assert_null(fl->figures[0]->e2);
+    assert_null(fl->figures[0]->e3);
+    assert_null(fl->figures[0]->e4);
+
     assert_null(fl->figures[1]->e1);
+    assert_null(fl->figures[1]->e2);
+    assert_null(fl->figures[1]->e3);
+    assert_null(fl->figures[1]->e4);
+
     assert_null(fl->figures[2]->e1);
+    assert_null(fl->figures[2]->e2);
+    assert_null(fl->figures[2]->e3);
+    assert_null(fl->figures[2]->e4);
+
     assert_null(fl->figures[3]->e1);
-    assert_null(fl->figures[4]->e1);
+    assert_null(fl->figures[3]->e2);
+    assert_null(fl->figures[3]->e3);
+    assert_null(fl->figures[3]->e4);
+
+    // check that figures without elements not counted and no SIGFAULT
+    int newActual = delete_one_line_elements(fl);
+    assert_int_equal(0, newActual);
+}
+
+static void test_fl_hashtable(void **state) {
+    FLHT *ht = fl_create_hashtable();
+
+    int currentValue = fl_ht_get(ht, 140);
+    assert_int_equal(0, currentValue);
+
+    fl_ht_set(ht, 140, 5);
+    fl_ht_set(ht, 200, 8);
+
+    currentValue = fl_ht_get(ht, 140);
+    assert_int_equal(5, currentValue);
+
+
+    currentValue = fl_ht_get(ht, 200);
+    assert_int_equal(8, currentValue);
+
+    fl_ht_set(ht, 140, 15);
+
+    currentValue = fl_ht_get(ht, 140);
+    assert_int_equal(15, currentValue);
+
+    fl_delete_hashtable(ht);
+
 }
 
 #endif

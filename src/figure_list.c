@@ -45,54 +45,139 @@ int is_figure_intersect_list(FigureList *fl, Figure *figure) {
 }
 
 int delete_one_line_elements(FigureList *fl) {
-    int deletedLines = 0;
+    int deletedElements = 0;
 
-    Element *elements[200];
-    int elementsSize = 0;
+    FLHT *ht = fl_create_hashtable();
 
+    const int elementsInLine = 10;
+
+    // count one-line elements
     for (int i = 0; i < fl->size; i++) {
-        elements[elementsSize] = fl->figures[i]->e1;
-        elementsSize++;
-        elements[elementsSize] = fl->figures[i]->e2;
-        elementsSize++;
-        elements[elementsSize] = fl->figures[i]->e3;
-        elementsSize++;
-        elements[elementsSize] = fl->figures[i]->e4;
-        elementsSize++;
-    }
-
-    for (int i = 0; i < elementsSize; i++) {
-        int countInLine = 1;
-
-        for (int j = 0; j < elementsSize; j++) {
-            if (i == j) continue;
-
-            if (elements[j] && elements[i] && elements[j]->y == elements[i]->y) countInLine++;
+        if (fl->figures[i]->e1) {
+            fl_ht_set(ht, fl->figures[i]->e1->y, fl_ht_get(ht, fl->figures[i]->e1->y)+1);
         }
 
-        if (countInLine == 10) {
-            int searchToDelete = elements[i]->y;
-            for (int j = 0; j < elementsSize; j++) {
-                if (elements[j] && searchToDelete == elements[j]->y) {
-                    for (int fi = 0; fi < fl->size; fi++) {
-                        if (fl->figures[fi]->e1 == elements[j]) {
-                            fl->figures[fi]->e1 = NULL;
-                        } else if (fl->figures[fi]->e2 == elements[j]) {
-                            fl->figures[fi]->e2 = NULL;
-                        } else if (fl->figures[fi]->e3 == elements[j]) {
-                            fl->figures[fi]->e3 = NULL;
-                        } else if (fl->figures[fi]->e4 == elements[j]) {
-                            fl->figures[fi]->e4 = NULL;
-                        }
-                    }
-                    delete_element(elements[j]);
-                    elements[j] = NULL;
-                }
-            }
+        if (fl->figures[i]->e2) {
+            fl_ht_set(ht, fl->figures[i]->e2->y, fl_ht_get(ht, fl->figures[i]->e2->y)+1);
+        }
 
-            deletedLines++;
+        if (fl->figures[i]->e3) {
+            fl_ht_set(ht, fl->figures[i]->e3->y, fl_ht_get(ht, fl->figures[i]->e3->y)+1);
+        }
+
+        if (fl->figures[i]->e4) {
+            fl_ht_set(ht, fl->figures[i]->e4->y, fl_ht_get(ht, fl->figures[i]->e4->y)+1);
         }
     }
 
-    return deletedLines;
+    // remove lines with 10 elements
+    for (int i = 0; i < fl->size; i++) {
+        if (fl->figures[i]->e1 && fl_ht_get(ht, fl->figures[i]->e1->y) == elementsInLine) {
+            deletedElements++;
+            delete_element(fl->figures[i]->e1);
+            fl->figures[i]->e1 = NULL;
+        }
+
+        if (fl->figures[i]->e2 && fl_ht_get(ht, fl->figures[i]->e2->y) == elementsInLine) {
+            deletedElements++;
+            delete_element(fl->figures[i]->e2);
+            fl->figures[i]->e2 = NULL;
+        }
+
+        if (fl->figures[i]->e3 && fl_ht_get(ht, fl->figures[i]->e3->y) == elementsInLine) {
+            deletedElements++;
+            delete_element(fl->figures[i]->e3);
+            fl->figures[i]->e3 = NULL;
+        }
+
+        if (fl->figures[i]->e4 && fl_ht_get(ht, fl->figures[i]->e4->y) == elementsInLine) {
+            deletedElements++;
+            delete_element(fl->figures[i]->e4);
+            fl->figures[i]->e4 = NULL;
+        }
+    }
+
+    fl_delete_hashtable(ht);
+
+    return deletedElements/elementsInLine;
+}
+
+FLHT *fl_create_hashtable() {
+    FLHT *ht = malloc(sizeof(FLHT));
+    ht->size = 20;
+
+    for (int i = 0; i < ht->size; i++) {
+        ht->buckets[i].nextValue = NULL;
+    }
+
+    return ht;
+}
+
+void fl_delete_hashtable(FLHT *ht) {
+    for (int i = 0; i < ht->size; i++) {
+        Bucket *bucket = ht->buckets[i].nextValue;
+
+        while(bucket != NULL) {
+            Bucket *nextBucket = bucket->nextValue;
+            free(bucket);
+            bucket = nextBucket;
+        }
+    }
+
+    free(ht);
+}
+
+void fl_ht_set(FLHT *ht, int key, int value) {
+    int hashKey = key % ht->size;
+
+    if (ht->buckets[hashKey].key == key) {
+        ht->buckets[hashKey].value = value;
+        return;
+    }
+
+    Bucket *prev = &ht->buckets[hashKey];
+    Bucket *bucket = ht->buckets[hashKey].nextValue;
+
+    do {
+        if (bucket == NULL) {
+
+            bucket = malloc(sizeof(Bucket));
+            bucket->key = key;
+            bucket->value = value;
+            bucket->nextValue = NULL;
+
+            prev->nextValue = bucket;
+            return;
+        }
+
+        if (bucket->key == key) {
+            bucket->value = value;
+            return;
+        }
+
+        prev = bucket;
+        bucket = bucket->nextValue;
+    } while (1);
+}
+
+int fl_ht_get(FLHT *ht, int key) {
+    int hashKey = key % ht->size;
+
+    if (ht->buckets[hashKey].key == key) {
+        return ht->buckets[hashKey].value;
+    }
+
+    Bucket *bucket = ht->buckets[hashKey].nextValue;
+
+    do {
+        if (bucket == NULL) {
+            return 0;
+        }
+
+        if (bucket->key == key) {
+            return bucket->value;
+        }
+
+        bucket = bucket->nextValue;
+    } while (1);
 }
