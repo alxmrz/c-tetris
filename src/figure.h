@@ -14,7 +14,7 @@ typedef struct Figure {
 } Figure;
 
 Figure *create_random_figure(int, int);
-
+Figure *create_figure_by_type(char type, int x, int y);
 Figure *create_o_figure(int, int);
 
 Figure *create_L_figure(int, int);
@@ -40,7 +40,5 @@ int move_down_figure(Figure *);
 int move_up_figure(Figure *);
 
 int is_figures_intersected(Figure *, Figure *);
-
-void move_figure_to_point(Figure *figure, int x, int y);
 
 #endif

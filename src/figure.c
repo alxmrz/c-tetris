@@ -1,31 +1,56 @@
+#include <time.h>
+#include <malloc.h>
+#include <stdlib.h>
+#include <stdio.h>
+
 #include "figure.h"
-#include "malloc.h"
-#include "stdlib.h"
-#include "stdio.h"
 #include "configuration.h"
 
 static const int figure_types_count = 7;
 
 Figure *create_random_figure(int x, int y) {
+    srand(time(NULL) + x + y);
     int randNumber = rand() % figure_types_count;
 
     switch (randNumber) {
         case 0:
-            return create_o_figure(x, y);
+            return create_figure_by_type('O', x, y);
         case 1:
-            return create_L_figure(x, y);
+            return create_figure_by_type('L', x, y);
         case 2:
-            return create_J_figure(x, y);
+            return create_figure_by_type('J', x, y);
         case 3:
-            return create_I_figure(x, y);
+            return create_figure_by_type('I', x, y);
         case 4:
-            return create_S_figure(x, y);
+            return create_figure_by_type('S', x, y);
         case 5:
-            return create_T_figure(x, y);
+            return create_figure_by_type('T', x, y);
         case 6:
-            return create_Z_figure(x, y);
+            return create_figure_by_type('Z', x, y);
         default:
             printf("Unexpected random number - %d!", randNumber);
+            return create_o_figure(x, y);
+    }
+}
+
+Figure *create_figure_by_type(char type, int x, int y) {
+    switch (type) {
+        case 'O':
+            return create_o_figure(x, y);
+        case 'L':
+            return create_L_figure(x, y);
+        case 'J':
+            return create_J_figure(x, y);
+        case 'I':
+            return create_I_figure(x, y);
+        case 'S':
+            return create_S_figure(x, y);
+        case 'T':
+            return create_T_figure(x, y);
+        case 'Z':
+            return create_Z_figure(x, y);
+        default:
+            printf("Unexpected figure type - %c!", type);
             return create_o_figure(x, y);
     }
 }
@@ -249,103 +274,4 @@ int is_figures_intersected(Figure *f1, Figure *f2) {
     }
 
     return 0;
-}
-
-void move_figure_to_point(Figure *figure, int x, int y) {
-    switch (figure->type) {
-        case 'O':
-            figure->e1->x = x;
-            figure->e1->y = y;
-
-            figure->e2->x = x + ELEMENT_SIZE;
-            figure->e2->y = y;
-
-            figure->e3->x = x;
-            figure->e3->y = y + ELEMENT_SIZE;
-
-            figure->e4->x = x + ELEMENT_SIZE;
-            figure->e4->y = y + ELEMENT_SIZE;
-            break;
-        case 'I':
-            figure->e1->x = x;
-            figure->e1->y = y;
-
-            figure->e2->x = x;
-            figure->e2->y = y + ELEMENT_SIZE;
-
-            figure->e3->x = x;
-            figure->e3->y = y + ELEMENT_SIZE * 2;
-
-            figure->e4->x = x;
-            figure->e4->y = y + ELEMENT_SIZE * 3;
-            break;
-        case 'J':
-            figure->e1->x = x;
-            figure->e1->y = y;
-
-            figure->e2->x = x;
-            figure->e2->y = y + ELEMENT_SIZE;
-
-            figure->e3->x = x;
-            figure->e3->y = y + ELEMENT_SIZE * 2;
-
-            figure->e4->x = x - ELEMENT_SIZE;
-            figure->e4->y = y + ELEMENT_SIZE * 2;
-            break;
-        case 'L':
-            figure->e1->x = x;
-            figure->e1->y = y;
-
-            figure->e2->x = x;
-            figure->e2->y = y + ELEMENT_SIZE;
-
-            figure->e3->x = x;
-            figure->e3->y = y + ELEMENT_SIZE * 2;
-
-            figure->e4->x = x + ELEMENT_SIZE;
-            figure->e4->y = y + ELEMENT_SIZE * 2;
-            break;
-        case 'S':
-            figure->e1->x = x;
-            figure->e1->y = y + ELEMENT_SIZE;
-
-            figure->e2->x = x + ELEMENT_SIZE;
-            figure->e2->y = y;
-
-            figure->e3->x = x + ELEMENT_SIZE;
-            figure->e3->y = y + ELEMENT_SIZE;
-
-            figure->e4->x = x + ELEMENT_SIZE * 2;
-            figure->e4->y = y;
-            break;
-        case 'T':
-            figure->e1->x = x;
-            figure->e1->y = y;
-
-            figure->e2->x = x + ELEMENT_SIZE;
-            figure->e2->y = y;
-
-            figure->e3->x = x + ELEMENT_SIZE;
-            figure->e3->y = y + ELEMENT_SIZE;
-
-            figure->e4->x = x + ELEMENT_SIZE * 2;
-            figure->e4->y = y;
-            break;
-        case 'Z':
-            figure->e1->x = x;
-            figure->e1->y = y;
-
-            figure->e2->x = x + ELEMENT_SIZE;
-            figure->e2->y = y;
-
-            figure->e3->x = x + ELEMENT_SIZE;
-            figure->e3->y = y + ELEMENT_SIZE;
-
-            figure->e4->x = x + ELEMENT_SIZE * 2;
-            figure->e4->y = y + ELEMENT_SIZE;
-            break;
-
-        default:
-            break;
-    }
 }

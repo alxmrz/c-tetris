@@ -128,7 +128,7 @@ void fl_delete_hashtable(FLHT *ht) {
 }
 
 void fl_ht_set(FLHT *ht, int key, int value) {
-    int hashKey = key % ht->size;
+    const int hashKey = key % ht->size;
 
     if (ht->buckets[hashKey].key == key) {
         ht->buckets[hashKey].value = value;
@@ -140,7 +140,6 @@ void fl_ht_set(FLHT *ht, int key, int value) {
 
     do {
         if (bucket == NULL) {
-
             bucket = malloc(sizeof(Bucket));
             bucket->key = key;
             bucket->value = value;
