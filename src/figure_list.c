@@ -1,3 +1,5 @@
+#include <malloc.h>
+
 #include "figure.h"
 #include "figure_list.h"
 

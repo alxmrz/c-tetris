@@ -1,8 +1,7 @@
-#ifndef ARRAY_MODULE
-#define ARRAY_MODULE
+#ifndef FL_MODULE
+#define FL_MODULE
 
 #include "figure.h"
-#include "malloc.h"
 
 #define DEFAULT_FL_SIZE 20
 

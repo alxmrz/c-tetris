@@ -1,11 +1,14 @@
-#include "malloc.h"
-#include "game.h"
-
+#include <malloc.h>
 #include <SDL2/SDL_timer.h>
 
-#include "figure_list.h"
+#include "game.h"
 #include "figure.h"
+#include "figure_list.h"
 #include "configuration.h"
+
+#define MS_TO_DOWN_FIGURES      1000
+#define MS_TO_DELETE_ONE_LINERS 500
+#define SCORE_MULTIPLIER        100
 
 Game *create_new_game() {
     Game *game = malloc(sizeof(Game));
@@ -38,43 +41,30 @@ void delete_game(Game *game) {
     free(game);
 }
 
+void move_down_static_figures(Game *game) {
+    for (int i = 0; i < game->fl->size; i++) {
+        const int result = move_down_figure(game->fl->figures[i]);
+        if (result == 1) {
+            if (is_figure_intersect_list(game->fl, game->fl->figures[i]) == 1) {
+                move_up_figure(game->fl->figures[i]);
+            }
+        }
+    }
+}
+
 void update_game(Game *game) {
     if (is_game_over(game)) {
         return;
     }
 
-    if (game->deleteCounter > 500) {
-        game->score += delete_one_line_elements(game->fl) * 100;
+    if (game->deleteCounter > MS_TO_DELETE_ONE_LINERS) {
+        game->score += delete_one_line_elements(game->fl) * SCORE_MULTIPLIER;
         game->deleteCounter = 0;
     }
 
-    if (game->downCounter >= 1000) {
-        int res = move_down_figure(game->figure);
-        if (res == 0) {
-            fl_push(game->fl, game->figure);
-            game->figure = create_figure_by_type(game->nextFigure->type, FIGURE_START_X_POINT, FIGURE_START_Y_POINT);
-            delete_figure(game->nextFigure);
-            game->nextFigure = create_random_figure(NEXT_FIGURE_START_X_POINT, NEXT_FIGURE_START_Y_POINT);
-        } else {
-            if (is_figure_intersect_list(game->fl, game->figure) == 1) {
-                move_up_figure(game->figure);
-                fl_push(game->fl, game->figure);
-                game->figure =
-                        create_figure_by_type(game->nextFigure->type, FIGURE_START_X_POINT, FIGURE_START_Y_POINT);
-                delete_figure(game->nextFigure);
-                game->nextFigure = create_random_figure(NEXT_FIGURE_START_X_POINT, NEXT_FIGURE_START_Y_POINT);
-            }
-        }
-
-        for (int i = 0; i < game->fl->size; i++) {
-            const int result = move_down_figure(game->fl->figures[i]);
-            if (result == 1) {
-                if (is_figure_intersect_list(game->fl, game->fl->figures[i]) == 1) {
-                    move_up_figure(game->fl->figures[i]);
-                }
-            }
-        }
-
+    if (game->downCounter >= MS_TO_DOWN_FIGURES) {
+        move_down_game_figure(game);
+        move_down_static_figures(game);
         game->downCounter = 0;
     }
 
@@ -97,4 +87,23 @@ void delay_game(Game *game) {
 void increment_game_counters(Game *game) {
     game->downCounter += FRAME_DELAY;
     game->deleteCounter += FRAME_DELAY;
+}
+
+void create_next_figure(Game *game) {
+    fl_push(game->fl, game->figure);
+    game->figure = create_figure_by_type(game->nextFigure->type, FIGURE_START_X_POINT, FIGURE_START_Y_POINT);
+    delete_figure(game->nextFigure);
+    game->nextFigure = create_random_figure(NEXT_FIGURE_START_X_POINT, NEXT_FIGURE_START_Y_POINT);
+}
+
+void move_down_game_figure(Game *game) {
+    const int result = move_down_figure(game->figure);
+    if (result == 0) {
+        create_next_figure(game);
+    } else {
+        if (is_figure_intersect_list(game->fl, game->figure) == 1) {
+            move_up_figure(game->figure);
+            create_next_figure(game);
+        }
+    }
 }

@@ -30,4 +30,9 @@ void delay_game(Game *);
 
 void increment_game_counters(Game *);
 
+void create_next_figure(Game *game);
+
+void move_down_game_figure(Game *game);
+
+void move_down_static_figures(Game *game);
 #endif

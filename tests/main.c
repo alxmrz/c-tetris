@@ -6,7 +6,7 @@
 
 #include "element_test.h"
 #include "figure_test.h"
-#include "figure_list.h"
+#include "figure_list_test.h"
 #include "game_test.h"
 
 int main(void) {
